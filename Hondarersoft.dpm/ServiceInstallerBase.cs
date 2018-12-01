@@ -1,7 +1,7 @@
 ﻿using System.Configuration.Install;
 using System.ServiceProcess;
 
-namespace Hondarersoft.dpm
+namespace Hondarersoft.Dpm
 {
     public abstract class ServiceInstallerBase : Installer
     {

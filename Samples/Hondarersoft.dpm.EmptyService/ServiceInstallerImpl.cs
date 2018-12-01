@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Hondarersoft.dpm
+namespace Hondarersoft.Dpm
 {
     [RunInstaller(true)]
     public class ServiceInstallerImpl : ServiceInstallerBase

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Hondarersoft.Dpm.EmptyService")]
+[assembly: AssemblyTitle("Hondarersoft.Dpm.AreaManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.EmptyService")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.AreaManager")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // このプロジェクトが COM に公開される場合、次の GUID が typelib の ID になります
-[assembly: Guid("52cfdfc9-929a-4a15-b83c-3857eacc201b")]
+[assembly: Guid("04ad7741-16b3-4ea1-81a4-2a6ddf36bc52")]
 
 // アセンブリのバージョン情報は次の 4 つの値で構成されています:
 //

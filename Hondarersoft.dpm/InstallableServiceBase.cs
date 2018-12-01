@@ -8,9 +8,9 @@ using System.Configuration.Install;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace Hondarersoft.dpm
+namespace Hondarersoft.Dpm
 {
-    public class InstallableServiceBase : ServiceBase
+    public abstract class InstallableServiceBase : ServiceBase
     {
         public string[] Args { get; private set; }
 

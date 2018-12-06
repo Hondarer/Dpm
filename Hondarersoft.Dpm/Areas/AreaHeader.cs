@@ -14,6 +14,10 @@ namespace Hondarersoft.Dpm.Areas
 
         public long RecordLength { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
+        public DateTime LastUpdated { get; set; }
+
         public long ReadPointer { get; set; }
 
         public long WritePointer { get; set; }

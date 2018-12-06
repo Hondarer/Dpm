@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.Areas
 {
     public static partial class Apis
     {

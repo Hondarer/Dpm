@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Hondarersoft.Dpm
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static partial class PInvoke
     {
         /// <summary>

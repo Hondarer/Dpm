@@ -1,6 +1,8 @@
 ﻿// C#で自己登録型のWindows サービスアプリケーションを作成する
 // https://symfoware.blog.fc2.com/blog-entry-1133.html
 
+using Hondarersoft.Dpm.ServiceProcess;
+
 namespace Hondarersoft.Dpm
 {
     public class EmptyService : InstallableServiceBase

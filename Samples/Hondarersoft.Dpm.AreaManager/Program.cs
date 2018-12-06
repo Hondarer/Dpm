@@ -89,9 +89,9 @@ namespace Hondarersoft.Dpm
 #if true
             MutexSecurity mutexSecurity = new MutexSecurity();
             mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
-            bool createNew;
             try
             {
+                bool createNew;
                 Mutex mutex = new Mutex(false, @"Global\TestMutex", out createNew, mutexSecurity);
                 if (createNew == true)
                 {

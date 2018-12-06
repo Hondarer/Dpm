@@ -8,7 +8,7 @@ using System.Configuration.Install;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.ServiceProcess
 {
     public abstract class InstallableServiceBase : ServiceBase
     {
@@ -44,7 +44,7 @@ namespace Hondarersoft.Dpm
             if (mode == "/install")
             {
 
-                if (IsServiceExists== true)
+                if (Apis.IsServiceExists(ServiceName) == true)
                 {
                     Console.WriteLine("既にインストールされています。");
 
@@ -60,7 +60,7 @@ namespace Hondarersoft.Dpm
             else if (mode == "/uninstall")
             {
 
-                if (IsServiceExists != true)
+                if (Apis.IsServiceExists(ServiceName) != true)
                 {
                     Console.WriteLine("サービスがインストールされていません。");
 
@@ -76,24 +76,6 @@ namespace Hondarersoft.Dpm
             }
 
             return false;
-        }
-
-        private bool IsServiceExists
-        {
-            get
-            {
-                ServiceController[] services = ServiceController.GetServices();
-
-                foreach (ServiceController sc in services)
-                {
-                    if (sc.ServiceName == ServiceName)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
         }
     }
 }

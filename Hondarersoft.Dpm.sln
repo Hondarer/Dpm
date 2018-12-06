@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.EmptyServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm", "Hondarersoft.Dpm\Hondarersoft.Dpm.csproj", "{3BC6B9F7-F637-4114-8BFD-971C9B496039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarer-soft.Dpm.ServiceManager", "Samples\Hondarer-soft.Dpm.ServiceManager\Hondarer-soft.Dpm.ServiceManager.csproj", "{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
 		{52CFDFC9-929A-4A15-B83C-3857EACC201B} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
+		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CC36C60-D2B4-408D-9265-089E38C9A64B}

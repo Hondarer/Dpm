@@ -1,18 +1,18 @@
 ﻿using System.Configuration.Install;
 using System.ServiceProcess;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public abstract class ServiceInstallerBase : Installer
+    public abstract class SelfServiceInstallerBase : Installer
     {
-        public ServiceInstallerBase()
+        public SelfServiceInstallerBase()
         {
             ServiceProcessInstaller spi = new ServiceProcessInstaller
             {
                 Account = ServiceAccount.LocalSystem
             };
 
-            ServiceInstaller si = new ServiceInstaller
+            ConfigurableServiceInstaller si = new ConfigurableServiceInstaller
             {
                 ServiceName = InstallableServiceBase.ServiceName,
                 DisplayName = InstallableServiceBase.DisplayName,

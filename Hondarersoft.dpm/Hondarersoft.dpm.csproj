@@ -64,7 +64,7 @@
     <Compile Include="ServiceProcess\Apis\IsServiceExists.cs" />
     <Compile Include="ServiceProcess\Apis\StartService.cs" />
     <Compile Include="ServiceProcess\Apis\StopService.cs" />
-    <Compile Include="ServiceProcess\ServiceBase.cs">
+    <Compile Include="ServiceProcess\DpmServiceBase.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PInvoke\FileMapping.cs" />

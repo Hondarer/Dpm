@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public abstract class ServiceBase : System.ServiceProcess.ServiceBase
+    public abstract class DpmServiceBase : System.ServiceProcess.ServiceBase
     {
         public ProcessArgs Args { get; private set; }
 
@@ -28,7 +28,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        public ServiceBase()
+        public DpmServiceBase()
         {
             Args = new ProcessArgs(System.Environment.GetCommandLineArgs());
 
@@ -60,7 +60,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
 
             // 当該メソッドが自分でないクラスに実装され、かつ、virturl である場合は true
-            if ((method.DeclaringType != typeof(ServiceBase).BaseType) && (method.IsVirtual == true))
+            if ((method.DeclaringType != typeof(DpmServiceBase).BaseType) && (method.IsVirtual == true))
             {
                 return true;
             }

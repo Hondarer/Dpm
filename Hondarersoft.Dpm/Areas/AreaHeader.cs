@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Areas
 {
-    public struct AreaHeader
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AreaFixedHeader
     {
+        public long RecordLength { get; set; }
+
         public long Blocks { get; set; }
 
         public long Records { get; set; }
+    }
 
-        public long RecordLength { get; set; }
-
-        public bool IsReadOnly { get; set; }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AreaVariableHeader
+    {
+        public bool IsFreezed { get; set; }
 
         public DateTime LastUpdated { get; set; }
 

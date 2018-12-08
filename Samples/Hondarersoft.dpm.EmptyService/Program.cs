@@ -29,7 +29,8 @@ namespace Hondarersoft.Dpm
 
         public EmptyService() : base()
         {
-            //AutoLog = false; // // The default is true.
+            //CanStop = false; // The default is true.
+            //AutoLog = false; // The default is true.
         }
 
         protected override void OnStart(string[] args)

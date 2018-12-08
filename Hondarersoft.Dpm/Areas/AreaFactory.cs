@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Areas
 {
     public class AreaFactory
     {
-        protected const string MMF_HEAD = "Dpm.";
+        protected const string MMF_HEAD = "Dpm.Area_";
 
         protected static readonly object lockObject = new object();
 
         protected static AreaFactory instance=null;
 
-        protected Dictionary<string, MemoryMappedFile> openingMmf = new Dictionary<string, MemoryMappedFile>();
+        internal readonly Dictionary<string, AreaManageData> manageDataDicionary = new Dictionary<string, AreaManageData>();
 
         public static AreaFactory Instance
         {
@@ -53,11 +50,11 @@ namespace Hondarersoft.Dpm.Areas
             return mmfName;
         }
 
-        public void CreateArea(string name, long capacity, bool othersReadonly = false, bool isGlobal = true)
+        public AreaAccessor CreateArea(string name, long capacity, bool isGlobal = true)
         {
-            lock (openingMmf)
+            lock (manageDataDicionary)
             {
-                if (openingMmf.ContainsKey(name) == true)
+                if (manageDataDicionary.ContainsKey(name) == true)
                 {
                     throw new Exception();
                 }
@@ -68,20 +65,50 @@ namespace Hondarersoft.Dpm.Areas
                     customSecurity.AddAccessRule(new AccessRule<MemoryMappedFileRights>("everyone", MemoryMappedFileRights.ReadWrite, AccessControlType.Allow));
                 }
 
-                MemoryMappedFile mmf = MemoryMappedFile.CreateOrOpen(GetMmfName(name,isGlobal), capacity, MemoryMappedFileAccess.ReadWrite, MemoryMappedFileOptions.None, customSecurity, HandleInheritability.None);
+                AreaManageData areaManageData = new AreaManageData();
 
-                openingMmf.Add(name, mmf);
+                areaManageData.SyncMutex = Apis.Sync.CreateMasterMutex("AreaSync_" + name, isGlobal);
+                areaManageData.SyncMutex.WaitOne();
 
-                //MemoryMappedViewAccessor accesser = mmf.CreateViewAccessor();
+                areaManageData.MemoryMappedFile = MemoryMappedFile.CreateOrOpen(GetMmfName(name,isGlobal), Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)) + capacity, MemoryMappedFileAccess.ReadWrite, MemoryMappedFileOptions.None, customSecurity, HandleInheritability.None);
+                areaManageData.HeaderAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), MemoryMappedFileAccess.ReadWrite);
 
+                AreaFixedHeader areaFixedHeader = new AreaFixedHeader
+                {
+                    Blocks=1,
+                    Records=1,
+                    RecordLength=capacity
+                };
+
+                areaManageData.HeaderAccessor.Write(0, ref areaFixedHeader);
+
+                AreaVariableHeader areaVariableHeader = new AreaVariableHeader()
+                {
+                    IsFreezed = false,
+                    LastUpdated = DateTime.UtcNow,
+                    ReadPointer = 0,
+                    WritePointer = 0
+                };
+
+                areaManageData.HeaderAccessor.Write(Marshal.SizeOf(typeof(AreaFixedHeader)), ref areaVariableHeader);
+
+                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), capacity, MemoryMappedFileAccess.ReadWrite);
+
+                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData.SyncMutex);
+
+                manageDataDicionary.Add(name, areaManageData);
+
+                areaManageData.SyncMutex.ReleaseMutex();
+
+                return areaManageData.DataAccessor;
             }
         }
 
-        public void OpenArea(string name, bool isGlobal = true)
+        public AreaAccessor OpenArea(string name, bool isReadOnly = true, bool isGlobal = true)
         {
-            lock (openingMmf)
+            lock (manageDataDicionary)
             {
-                if (openingMmf.ContainsKey(name) == true)
+                if (manageDataDicionary.ContainsKey(name) == true)
                 {
                     throw new Exception();
                 }
@@ -94,40 +121,62 @@ namespace Hondarersoft.Dpm.Areas
                     throw new Exception();
                 }
 
-                MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(mmfName, MemoryMappedFileRights.ReadWrite);
+                AreaManageData areaManageData = new AreaManageData();
 
-                openingMmf.Add(name, mmf);
+                MemoryMappedFileRights memoryMappedFileRights = MemoryMappedFileRights.ReadWrite;
+                MemoryMappedFileAccess memoryMappedFileAccess = MemoryMappedFileAccess.ReadWrite;
 
-                //#if false
-                //                // 読み取り専用で開く(アクセサーの書き込み操作は例外となる)
-                //                MemoryMappedFile _mmf = MemoryMappedFile.OpenExisting(@"Global\Hondarersoft.Dpm.TestMemory", MemoryMappedFileRights.Read);
-                //                MemoryMappedViewAccessor _accesser = _mmf.CreateViewAccessor(0, 1024, MemoryMappedFileAccess.Read);
-                //#else
-                //                // 読み書き可能で開く
-                //                MemoryMappedFile _mmf = MemoryMappedFile.OpenExisting(@"Global\Hondarersoft.Dpm.TestMemory", MemoryMappedFileRights.ReadWrite);
-                //                MemoryMappedViewAccessor _accesser = _mmf.CreateViewAccessor(0, 1024, MemoryMappedFileAccess.ReadWrite);
-                //#endif
+                if (isReadOnly == true)
+                {
+                    memoryMappedFileRights = MemoryMappedFileRights.Read;
+                    memoryMappedFileAccess = MemoryMappedFileAccess.Read;
+                }
+
+                areaManageData.MemoryMappedFile = MemoryMappedFile.OpenExisting(mmfName, memoryMappedFileRights);
+                areaManageData.HeaderAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), memoryMappedFileAccess);
+
+                AreaFixedHeader areaFixedHeader;
+
+                areaManageData.HeaderAccessor.Read(0, out areaFixedHeader);
+
+                Console.WriteLine($"size: {areaFixedHeader.Blocks * areaFixedHeader.Records * areaFixedHeader.RecordLength}");
+
+                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), areaFixedHeader.Blocks* areaFixedHeader.Records*areaFixedHeader.RecordLength, memoryMappedFileAccess);
+
+                AreaVariableHeader areaVariableHeader;
+                areaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
+
+                if (areaVariableHeader.IsFreezed == false)
+                {
+                    areaManageData.SyncMutex = Apis.Sync.CreateClientMutex("AreaSync_" + name, isGlobal);
+                }
+
+                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData.SyncMutex);
+
+                manageDataDicionary.Add(name, areaManageData);
+
+                return areaManageData.DataAccessor;
             }
         }
 
-        public MemoryMappedViewAccessor GetAccessor(string name)
+        public AreaAccessor GetAccessor(string name)
         {
-            lock (openingMmf)
+            lock (manageDataDicionary)
             {
-                if (openingMmf.ContainsKey(name) != true)
-                {
-                    throw new Exception();
-                }
-
-                return openingMmf[name].CreateViewAccessor();
+                return manageDataDicionary[name].DataAccessor;
             }
+        }
+
+        public static string GetAccessDataMutexKey(string name)
+        {
+            return $"AreaAccess.{name}";
         }
 
         ~AreaFactory()
         {
-            foreach (MemoryMappedFile mmf in openingMmf.Values)
+            foreach (AreaManageData areaManageData in manageDataDicionary.Values)
             {
-                mmf.Dispose();
+                areaManageData.MemoryMappedFile.Dispose();
             }
         }
     }

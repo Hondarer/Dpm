@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Security.AccessControl;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace Hondarersoft.Dpm.Sync.Apis
+namespace Hondarersoft.Dpm.Apis
 {
     public static partial class Sync
     {
@@ -34,7 +29,10 @@ namespace Hondarersoft.Dpm.Sync.Apis
             string mutexName = GetMutexName(name, isGlobal);
 
             MutexSecurity mutexSecurity = new MutexSecurity();
-            mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+            if (isGlobal == true)
+            {
+                mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+            }
             try
             {
                 bool createNew;

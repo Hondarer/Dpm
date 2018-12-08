@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace Hondarersoft.Dpm.Sync.Apis
+namespace Hondarersoft.Dpm.Apis
 {
     public static partial class Sync
     {
@@ -22,6 +17,8 @@ namespace Hondarersoft.Dpm.Sync.Apis
 
                 if (createNew != false)
                 {
+                    // 所有者がいなかった
+
                     mutex.Close();
                     mutex.Dispose();
                     throw new IOException($"A mutex named '{mutexName}' is not exist.");

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Hondarersoft.Dpm.ServiceManager")]
+[assembly: AssemblyTitle("Hondarersoft.Dpm.TimerManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.ServiceManager")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.TimerManager")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // このプロジェクトが COM に公開される場合、次の GUID が typelib の ID になります
-[assembly: Guid("3945f7a3-c076-4fbf-8fa4-f3b013d623ce")]
+[assembly: Guid("32eebae5-c1aa-4459-a451-33f5bf516f61")]
 
 // アセンブリのバージョン情報は次の 4 つの値で構成されています:
 //

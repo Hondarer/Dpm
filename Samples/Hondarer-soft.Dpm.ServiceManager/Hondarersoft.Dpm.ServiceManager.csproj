@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Hondarer_soft.Dpm.ServiceManager</RootNamespace>
-    <AssemblyName>Hondarer-soft.Dpm.ServiceManager</AssemblyName>
+    <RootNamespace>Hondarersoft.Dpm.ServiceManager</RootNamespace>
+    <AssemblyName>Hondarersoft.Dpm.ServiceManager</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

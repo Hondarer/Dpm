@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Environment
 {
@@ -25,6 +24,16 @@ namespace Hondarersoft.Dpm.Environment
         private const char ARGS_KEY_CHAR = '/';
 
         /// <summary>
+        /// キーと値の結合文字を表します。
+        /// </summary>
+        private const char ARGS_EQUAL_CHAR = '=';
+
+        /// <summary>
+        /// 値のエスケープ文字を表します。
+        /// </summary>
+        private const char ARGS_QUOT = '"';
+
+        /// <summary>
         /// 長さ 0 を表します。
         /// </summary>
         private const int LENGTH_EMPTY = 0;
@@ -36,7 +45,7 @@ namespace Hondarersoft.Dpm.Environment
 
         #endregion
 
-        #region メンバー
+        #region フィールド
 
         /// <summary>
         /// プロセス引数を正規化したディクショナリ情報を保持します。
@@ -100,8 +109,6 @@ namespace Hondarersoft.Dpm.Environment
                     // ディクショナリをクリアする。
                     Clear();
 
-                    string capturingKey = string.Empty;
-
                     // 引数でループ
                     for (int index = 0; index < value.Length; index++)
                     {
@@ -118,17 +125,27 @@ namespace Hondarersoft.Dpm.Environment
                             // オプションを表す文字の後ろに何らかの文字列がある
                             if (value[index].Length > 0)
                             {
-                                // キーとして確保
-                                capturingKey = value[index].Substring(1);
+                                // キーと値を取り出し
+                                string argsKey = value[index].Substring(1);
+                                string argsValue = null;
 
-                                // はじめてのキーならばディクショナリを登録
-                                AddKey(capturingKey);
+                                if (argsKey.Contains(ARGS_EQUAL_CHAR) == true)
+                                {
+                                    argsValue = argsKey.Substring(argsKey.IndexOf(ARGS_EQUAL_CHAR) + 1);
+                                    argsKey = argsKey.Substring(0, argsKey.IndexOf(ARGS_EQUAL_CHAR));
+                                }
+
+                                // キーを登録
+                                AddKey(argsKey);
+
+                                // 値を登録
+                                AddValue(argsKey, argsValue);
                             }
                         }
                         else
                         {
-                            // 値を登録
-                            AddValue(capturingKey, value[index]);
+                            // デフォルトキーで値を登録
+                            AddValue(DEFAULT_KEY, value[index]);
                         }
                     }
                 }
@@ -284,6 +301,12 @@ namespace Hondarersoft.Dpm.Environment
             // キーの登録
             AddKey(key);
 
+            // 値の前後にダブルコーテーションが含まれていた場合は、取り除く
+            if ((valstr.Length > 1) && (valstr[0] == ARGS_QUOT) && (valstr[valstr.Length-1] == ARGS_QUOT))
+            {
+                valstr = valstr.Substring(1, valstr.Length - 2);
+            }
+
             // 初回の値登録
             if (HasValue(key) == false)
             {
@@ -347,27 +370,34 @@ namespace Hondarersoft.Dpm.Environment
                 // 値を持つか
                 if (HasValue(key) == true)
                 {
-                    // デフォルトのキーでなければ、キーを出力
-                    if (string.IsNullOrEmpty(key) != true)
-                    {
-                        if (sb.Length != 0)
-                        {
-                            sb.Append(" ");
-                        }
-
-                        sb.AppendFormat("{0}{1}", ARGS_KEY_CHAR, key);
-                    }
-
                     // 値でループ
                     foreach (string value in normalizedArgs[key])
                     {
+                        // デフォルトのキーでなければ、キーを出力
+                        if (string.IsNullOrEmpty(key) != true)
+                        {
+                            if (sb.Length != 0)
+                            {
+                                sb.Append(" ");
+                            }
+
+                            sb.AppendFormat("{0}{1}", ARGS_KEY_CHAR, key);
+                        }
+
                         // 値を出力
                         if (sb.Length != 0)
                         {
-                            sb.Append(" ");
+                            sb.Append("=");
                         }
 
-                        sb.AppendFormat("\"{0}\"", value);
+                        if (value.Contains(" ") == true)
+                        {
+                            sb.AppendFormat("\"{0}\"", value);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("{0}", value);
+                        }
                     }
                 }
                 else

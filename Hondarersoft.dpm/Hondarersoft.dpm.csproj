@@ -72,10 +72,10 @@
     <Compile Include="ServiceProcess\ServiceIdentify.cs" />
     <Compile Include="ServiceProcess\IntegratedServiceInstaller.cs" />
     <Compile Include="ServiceProcess\ServiceInstallParameter.cs" />
+    <Compile Include="Sync\Apis\CreateClientMutex.cs" />
+    <Compile Include="Sync\Apis\CreateMasterMutex.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sync\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.ja.resx" />
     <EmbeddedResource Include="Resources\Resource.resx">

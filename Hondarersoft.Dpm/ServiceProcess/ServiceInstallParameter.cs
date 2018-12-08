@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration.Install;
-using System.ServiceProcess;
 using System.Reflection;
+using System.ServiceProcess;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public class ServiceInstallParameter : ServiceIdentify
+    public class ServiceInstallParameter
     {
         public enum FAILURE_ACTION_TYPE : int
         {
@@ -19,63 +15,9 @@ namespace Hondarersoft.Dpm.ServiceProcess
             FAILURE_ACTION_RUN_COMMAND = PInvoke.SC_ACTION_TYPE.SC_ACTION_RUN_COMMAND
         }
 
-        private string displayName;
+        public string DisplayName { get; set; }
 
-        public string DisplayName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(displayName) == true)
-                {
-                    if (string.IsNullOrEmpty(InstanceID) == true)
-                    {
-                        return ServiceBaseName;
-                    }
-
-                    return string.Concat(ServiceBaseName, " - ", InstanceID);
-                }
-
-                if (string.IsNullOrEmpty(InstanceID) == true)
-                {
-                    return displayName;
-                }
-
-                return string.Concat(displayName, " - ", InstanceID);
-            }
-            set
-            {
-                displayName = value;
-            }
-        }
-
-        private string description;
-
-        public string Description
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(description) == true)
-                {
-                    if (string.IsNullOrEmpty(InstanceID) == true)
-                    {
-                        return ServiceBaseName;
-                    }
-
-                    return string.Concat(ServiceBaseName, " - ", InstanceID);
-                }
-
-                if (string.IsNullOrEmpty(InstanceID) == true)
-                {
-                    return description;
-                }
-
-                return string.Concat(description, " - ", InstanceID);
-            }
-            set
-            {
-                description = value;
-            }
-        }
+        public string Description { get; set; }
 
         public ServiceAccount Account { get; set; } = ServiceAccount.LocalSystem;
 

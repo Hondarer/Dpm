@@ -2,31 +2,50 @@
 // C#で自己登録型のWindows サービスアプリケーションを作成する
 // https://symfoware.blog.fc2.com/blog-entry-1133.html
 
+using Hondarersoft.Dpm.Environment;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
     public abstract class ServiceBase : System.ServiceProcess.ServiceBase
     {
-        string[] Args { get; set; }
+        public ProcessArgs Args { get; private set; }
+
+        public string ServiceBaseName { get; private set; }
+
+        public string InstanceID { get; private set; }
+
+        public new string ServiceName
+        {
+            get
+            {
+                return base.ServiceName;
+            }
+            private set
+            {
+                base.ServiceName = value;
+            }
+        }
 
         public ServiceBase()
         {
-            List<string> argsList = System.Environment.GetCommandLineArgs().ToList();
-            argsList.RemoveAt(0);
-            Args = argsList.ToArray();
+            Args = new ProcessArgs(System.Environment.GetCommandLineArgs());
 
             Apis.Culture.ConfigureConsoleCulture();
 
-            // TODO: コマンドライン引数の /InstanceID オプションを解釈して、ServiceName に設定する
-            ServiceName = GetType().Name;
+            InstanceID = Args.GetValue("InstanceID");
+            ServiceBaseName = GetType().Name;
+            if (string.IsNullOrEmpty(InstanceID) != true)
+            {
+                ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
+            }
+            else
+            {
+                ServiceName = ServiceBaseName;
+            }
 
-            // シャットダウン可能、一時停止および再開可能を、メソッドの実装状態によって判定する
+            // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
         }
@@ -53,19 +72,12 @@ namespace Hondarersoft.Dpm.ServiceProcess
         {
             if (serviceInstallParameter == null)
             {
-                serviceInstallParameter = new ServiceInstallParameter() { ServiceBaseName = GetType().Name };
+                serviceInstallParameter = new ServiceInstallParameter();
             }
 
-            if (Args.Length < 1)
+            if (Args.HasKey("Install"))
             {
-                return false;
-            }
-
-            string mode = Args[0].ToLower();
-
-            if (mode == "/install")
-            {
-                if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) == true)
+                if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
                 {
                     Console.Error.WriteLine(Resources.Resource.SERVICE_ALREADY_INSTALLED);
                     ExitCode = 1;
@@ -74,9 +86,9 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 {
                     try
                     {
-                        new IntegratedServiceInstaller().Install(serviceInstallParameter);
+                        new IntegratedServiceInstaller().Install(GetType().Name, InstanceID, serviceInstallParameter);
 
-                        if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) == true)
+                        if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
                         {
                             ExitCode = 0;
                         }
@@ -94,9 +106,9 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 return true;
             }
-            else if (mode == "/uninstall")
+            else if (Args.HasKey("Uninstall"))
             {
-                if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) != true)
+                if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
                 {
                     Console.Error.WriteLine(Resources.Resource.SERVICE_ISNOT_INSTALLED);
                     ExitCode = 1;
@@ -105,8 +117,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 {
                     try
                     {
-                        new IntegratedServiceInstaller().Uninstall(serviceInstallParameter);
-                        if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) != true)
+                        new IntegratedServiceInstaller().Uninstall(GetType().Name, InstanceID, serviceInstallParameter);
+                        if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
                         {
                             ExitCode = 0;
                         }

@@ -49,7 +49,6 @@ namespace Hondarersoft.Dpm.Areas
             }
 
             mmfName = string.Concat(mmfName, name);
-            Console.WriteLine(mmfName);
 
             return mmfName;
         }

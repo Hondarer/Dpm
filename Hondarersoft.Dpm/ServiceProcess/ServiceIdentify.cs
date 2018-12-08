@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hondarersoft.Dpm.ServiceProcess
+﻿namespace Hondarersoft.Dpm.ServiceProcess
 {
     public class ServiceIdentify
     {

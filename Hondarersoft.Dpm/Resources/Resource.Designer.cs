@@ -61,11 +61,20 @@ namespace Hondarersoft.Dpm.Resources {
         }
         
         /// <summary>
-        ///   Test String に類似しているローカライズされた文字列を検索します。
+        ///   Service already installed. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string TEST_STRING {
+        public static string SERVICE_ALREADY_INSTALLED {
             get {
-                return ResourceManager.GetString("TEST_STRING", resourceCulture);
+                return ResourceManager.GetString("SERVICE_ALREADY_INSTALLED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Service is not installed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SERVICE_ISNOT_INSTALLED {
+            get {
+                return ResourceManager.GetString("SERVICE_ISNOT_INSTALLED", resourceCulture);
             }
         }
     }

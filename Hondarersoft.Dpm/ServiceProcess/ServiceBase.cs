@@ -67,7 +67,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) == true)
                 {
-                    Console.Error.WriteLine("すでにインストールされています。");
+                    Console.Error.WriteLine(Resources.Resource.SERVICE_ALREADY_INSTALLED);
                     ExitCode = 1;
                 }
                 else
@@ -98,7 +98,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) != true)
                 {
-                    Console.Error.WriteLine("サービスがインストールされていません。");
+                    Console.Error.WriteLine(Resources.Resource.SERVICE_ISNOT_INSTALLED);
                     ExitCode = 1;
                 }
                 else

@@ -25,6 +25,23 @@ namespace Hondarersoft.Dpm.ServiceProcess
             return false;
         }
 
+        public static ServiceController GetMyServiceController()
+        {
+            int myPid = Process.GetCurrentProcess().Id;
+
+            ServiceController[] services = ServiceController.GetServices();
+
+            foreach (ServiceController sc in services)
+            {
+                if (sc.GetProcessId() == myPid)
+                {
+                    return sc;
+                }
+            }
+
+            return null;
+        }
+
         public static bool StartService(string name)
         {
             if (IsServiceExists(name) == true)

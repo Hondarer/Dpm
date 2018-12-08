@@ -2,18 +2,30 @@
 // https://symfoware.blog.fc2.com/blog-entry-1133.html
 
 using Hondarersoft.Dpm.ServiceProcess;
+using System;
+using System.Reflection;
+using System.Threading;
 
 namespace Hondarersoft.Dpm
 {
-    public class EmptyService : InstallableServiceBase
+    public class EmptyService : ServiceBase
     {
         public static int Main(string[] args)
         {
             EmptyService instance = new EmptyService();
 
-            if (instance.TryInstall() == true)
+            ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                return 0;
+                ServiceBaseName = nameof(EmptyService),
+                DisplayName = "Empty Service",
+                Description = "Description of Empty Service",
+
+                //InstanceID="TEST" // 扱いが難しい。どうあるべきか。インストールのときも、引数で指定すればよさそう。
+            };
+
+            if (instance.TryInstall(serviceInstallParameter) == true)
+            {
+                return instance.ExitCode;
             }
 
             Run(instance);
@@ -21,15 +33,10 @@ namespace Hondarersoft.Dpm
             return instance.ExitCode;
         }
 
-        public EmptyService()
+        public EmptyService() : base()
         {
-            DisplayName = "Empty Service";
-            Description = "Description of Empty Service";
-
             CanShutdown = true; // The default is false.
             CanPauseAndContinue = true; // The default is false.
-
-            EventLog.WriteEntry(".ctor");
         }
 
         protected override void OnStart(string[] args)
@@ -64,7 +71,8 @@ namespace Hondarersoft.Dpm
 
         protected override void OnShutdown()
         {
-            EventLog.WriteEntry("OnShutdown");
+            // Event log service has already stopped at this timing.
+            //xEventLog.WriteEntry("OnShutdown");
 
             base.OnShutdown();
         }

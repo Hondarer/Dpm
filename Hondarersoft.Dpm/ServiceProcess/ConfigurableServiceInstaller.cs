@@ -16,7 +16,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             //を行ないます。API を調べてみて下さい。
 
-            Console.WriteLine("OnAfterInstall");
+            Context.LogMessage("OnAfterInstall");
 
             base.OnAfterInstall(savedState);
         }

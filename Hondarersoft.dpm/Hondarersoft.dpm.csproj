@@ -48,24 +48,25 @@
     <Compile Include="Areas\Apis.cs" />
     <Compile Include="Areas\AreaFactory.cs" />
     <Compile Include="Areas\AreaHeader.cs" />
+    <Compile Include="Extensions\ServiceControllerExtensions.cs" />
+    <Compile Include="PInvoke\Service.cs" />
     <Compile Include="ServiceProcess\Apis.cs" />
     <Compile Include="ServiceProcess\ConfigurableServiceInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ServiceProcess\InstallableServiceBase.cs">
+    <Compile Include="ServiceProcess\ServiceBase.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PInvoke\FileMapping.cs" />
     <Compile Include="PInvoke\Handle.cs" />
     <Compile Include="PInvoke\PInvoke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceProcess\SelfServiceInstallerBase.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ServiceProcess\ServiceConfigurator.cs" />
+    <Compile Include="ServiceProcess\ServiceIdentify.cs" />
+    <Compile Include="ServiceProcess\IntegratedServiceInstaller.cs" />
+    <Compile Include="ServiceProcess\ServiceInstallParameter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Extensions\" />
     <Folder Include="Sync\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

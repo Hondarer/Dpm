@@ -75,6 +75,7 @@
     <Compile Include="ServiceProcess\IntegratedServiceInstaller.cs" />
     <Compile Include="ServiceProcess\ServiceInstallParameter.cs" />
     <Compile Include="Sync\Apis\CreateClientMutex.cs" />
+    <Compile Include="Sync\Apis\CreateGlobalMutex.cs" />
     <Compile Include="Sync\Apis\CreateMasterMutex.cs" />
   </ItemGroup>
   <ItemGroup />

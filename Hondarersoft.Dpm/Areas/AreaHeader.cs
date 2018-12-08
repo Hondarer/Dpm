@@ -15,12 +15,15 @@ namespace Hondarersoft.Dpm.Areas
         public long Blocks { get; set; }
 
         public long Records { get; set; }
+
+        public bool IsQueue { get; set; }
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct AreaVariableHeader
     {
         public bool IsFreezed { get; set; }
+
 
         public DateTime LastUpdated { get; set; }
 

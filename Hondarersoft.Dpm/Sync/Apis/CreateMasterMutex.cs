@@ -22,7 +22,6 @@ namespace Hondarersoft.Dpm.Apis
             return mutexName;
         }
 
-
         public static Mutex CreateMasterMutex(string name ,bool isGlobal = true)
         {
             Mutex mutex;
@@ -33,6 +32,7 @@ namespace Hondarersoft.Dpm.Apis
             {
                 mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
             }
+
             try
             {
                 bool createNew;

@@ -52,6 +52,7 @@ namespace Hondarersoft.Dpm
             };
 
             AreaFactory.Instance.GetAccessor("TestMemory").Write(ref testStruct);
+            //AreaFactory.Instance.GetAccessor("TestMemory").Freeze();
 
             Console.WriteLine("created.");
             Console.ReadLine();

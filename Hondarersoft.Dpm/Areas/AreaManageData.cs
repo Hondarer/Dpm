@@ -14,5 +14,8 @@ namespace Hondarersoft.Dpm.Areas
         public MemoryMappedViewAccessor HeaderAccessor { get; set; }
         public AreaAccessor DataAccessor { get; set; }
         public Mutex SyncMutex { get; set; }
+        public AreaFixedHeader AreaFixedHeader;
+
+        public bool IsCreator { get; set; }
     }
 }

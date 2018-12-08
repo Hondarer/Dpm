@@ -9,7 +9,7 @@ namespace Hondarersoft.Dpm.Areas
 {
     public class AreaFactory
     {
-        protected const string MMF_HEAD = "Dpm.Area_";
+        protected const string MMF_HEAD = "Dpm.AreaData_";
 
         protected static readonly object lockObject = new object();
 
@@ -50,7 +50,7 @@ namespace Hondarersoft.Dpm.Areas
             return mmfName;
         }
 
-        public AreaAccessor CreateArea(string name, long capacity, bool isGlobal = true)
+        public AreaAccessor CreateArea(string name, long capacity, bool isGlobal = true, bool isQueue = false)
         {
             lock (manageDataDicionary)
             {
@@ -65,22 +65,26 @@ namespace Hondarersoft.Dpm.Areas
                     customSecurity.AddAccessRule(new AccessRule<MemoryMappedFileRights>("everyone", MemoryMappedFileRights.ReadWrite, AccessControlType.Allow));
                 }
 
-                AreaManageData areaManageData = new AreaManageData();
+                AreaManageData areaManageData = new AreaManageData
+                {
+                    SyncMutex = Apis.Sync.CreateMasterMutex(GetAccessDataMutexKey(name), isGlobal),
+                    IsCreator = true
+                };
 
-                areaManageData.SyncMutex = Apis.Sync.CreateMasterMutex("AreaSync_" + name, isGlobal);
                 areaManageData.SyncMutex.WaitOne();
 
                 areaManageData.MemoryMappedFile = MemoryMappedFile.CreateOrOpen(GetMmfName(name,isGlobal), Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)) + capacity, MemoryMappedFileAccess.ReadWrite, MemoryMappedFileOptions.None, customSecurity, HandleInheritability.None);
                 areaManageData.HeaderAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), MemoryMappedFileAccess.ReadWrite);
 
-                AreaFixedHeader areaFixedHeader = new AreaFixedHeader
+                areaManageData.AreaFixedHeader = new AreaFixedHeader
                 {
-                    Blocks=1,
-                    Records=1,
-                    RecordLength=capacity
+                    Blocks = 1,
+                    Records = 1,
+                    RecordLength = capacity,
+                    IsQueue = isQueue
                 };
 
-                areaManageData.HeaderAccessor.Write(0, ref areaFixedHeader);
+                areaManageData.HeaderAccessor.Write(0, ref areaManageData.AreaFixedHeader);
 
                 AreaVariableHeader areaVariableHeader = new AreaVariableHeader()
                 {
@@ -94,7 +98,7 @@ namespace Hondarersoft.Dpm.Areas
 
                 MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), capacity, MemoryMappedFileAccess.ReadWrite);
 
-                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData.SyncMutex);
+                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData);
 
                 manageDataDicionary.Add(name, areaManageData);
 
@@ -121,37 +125,33 @@ namespace Hondarersoft.Dpm.Areas
                     throw new Exception();
                 }
 
-                AreaManageData areaManageData = new AreaManageData();
-
-                MemoryMappedFileRights memoryMappedFileRights = MemoryMappedFileRights.ReadWrite;
-                MemoryMappedFileAccess memoryMappedFileAccess = MemoryMappedFileAccess.ReadWrite;
-
-                if (isReadOnly == true)
+                AreaManageData areaManageData = new AreaManageData
                 {
-                    memoryMappedFileRights = MemoryMappedFileRights.Read;
-                    memoryMappedFileAccess = MemoryMappedFileAccess.Read;
-                }
+                    MemoryMappedFile = MemoryMappedFile.OpenExisting(mmfName, MemoryMappedFileRights.ReadWrite)
+                };
 
-                areaManageData.MemoryMappedFile = MemoryMappedFile.OpenExisting(mmfName, memoryMappedFileRights);
-                areaManageData.HeaderAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), memoryMappedFileAccess);
+                areaManageData.HeaderAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), MemoryMappedFileAccess.ReadWrite);
 
-                AreaFixedHeader areaFixedHeader;
+                areaManageData.HeaderAccessor.Read(0, out areaManageData.AreaFixedHeader);
 
-                areaManageData.HeaderAccessor.Read(0, out areaFixedHeader);
-
-                Console.WriteLine($"size: {areaFixedHeader.Blocks * areaFixedHeader.Records * areaFixedHeader.RecordLength}");
-
-                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), areaFixedHeader.Blocks* areaFixedHeader.Records*areaFixedHeader.RecordLength, memoryMappedFileAccess);
+                Console.WriteLine($"size: {areaManageData.AreaFixedHeader.Blocks * areaManageData.AreaFixedHeader.Records * areaManageData.AreaFixedHeader.RecordLength}");
 
                 AreaVariableHeader areaVariableHeader;
                 areaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
 
-                if (areaVariableHeader.IsFreezed == false)
+                MemoryMappedFileAccess memoryMappedFileDataAccess = MemoryMappedFileAccess.ReadWrite;
+                if ((isReadOnly == true) || (areaVariableHeader.IsFreezed == true))
                 {
-                    areaManageData.SyncMutex = Apis.Sync.CreateClientMutex("AreaSync_" + name, isGlobal);
+                    memoryMappedFileDataAccess = MemoryMappedFileAccess.Read;
                 }
 
-                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData.SyncMutex);
+                if ((areaManageData.AreaFixedHeader.IsQueue == true) || ((isReadOnly == false) && (areaVariableHeader.IsFreezed == false)))
+                {
+                    areaManageData.SyncMutex = Apis.Sync.CreateClientMutex(GetAccessDataMutexKey(name), isGlobal);
+                }
+
+                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), areaManageData.AreaFixedHeader.Blocks* areaManageData.AreaFixedHeader.Records* areaManageData.AreaFixedHeader.RecordLength, memoryMappedFileDataAccess);
+                areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData);
 
                 manageDataDicionary.Add(name, areaManageData);
 
@@ -169,7 +169,7 @@ namespace Hondarersoft.Dpm.Areas
 
         public static string GetAccessDataMutexKey(string name)
         {
-            return $"AreaAccess.{name}";
+            return $"AreaSync_{name}";
         }
 
         ~AreaFactory()

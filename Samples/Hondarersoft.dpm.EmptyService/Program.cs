@@ -18,7 +18,7 @@ namespace Hondarersoft.Dpm
             {
                 ServiceBaseName = nameof(EmptyService),
                 DisplayName = "Empty Service",
-                Description = "Description of Empty Service",
+                Description = "Description of Empty Service"
 
                 //InstanceID="TEST" // 扱いが難しい。どうあるべきか。インストールのときも、引数で指定すればよさそう。
             };
@@ -37,6 +37,7 @@ namespace Hondarersoft.Dpm
         {
             CanShutdown = true; // The default is false.
             CanPauseAndContinue = true; // The default is false.
+            //AutoLog = false; // // The default is true.
         }
 
         protected override void OnStart(string[] args)

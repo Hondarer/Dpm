@@ -35,8 +35,6 @@ namespace Hondarersoft.Dpm
 
         public EmptyService() : base()
         {
-            CanShutdown = true; // The default is false.
-            CanPauseAndContinue = true; // The default is false.
             //AutoLog = false; // // The default is true.
         }
 

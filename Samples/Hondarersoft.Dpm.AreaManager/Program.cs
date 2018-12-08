@@ -22,9 +22,9 @@ namespace Hondarersoft.Dpm
 
         static void Main(string[] args)
         {
-            Console.WriteLine(Areas.Apis.GetStructSize("Hondarersoft.dpm.dll", "Hondarersoft.Dpm.PInvoke+SERVICE_STATUS_PROCESS"));
+            Console.WriteLine(Apis.Areas.GetStructSize("Hondarersoft.dpm.dll", "Hondarersoft.Dpm.PInvoke+SERVICE_STATUS_PROCESS"));
 
-            if (Apis.IsAdministrator() != true)
+            if (Apis.Principal.IsAdministrator() != true)
             {
                 Console.WriteLine("You are not Administrator.");
 

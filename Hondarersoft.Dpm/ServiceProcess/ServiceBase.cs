@@ -4,7 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
@@ -14,12 +17,36 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         public ServiceBase()
         {
-            List<string> argsList = Environment.GetCommandLineArgs().ToList();
+            List<string> argsList = System.Environment.GetCommandLineArgs().ToList();
             argsList.RemoveAt(0);
             Args = argsList.ToArray();
 
+            Apis.Culture.ConfigureConsoleCulture();
+
             // TODO: コマンドライン引数の /InstanceID オプションを解釈して、ServiceName に設定する
             ServiceName = GetType().Name;
+
+            // シャットダウン可能、一時停止および再開可能を、メソッドの実装状態によって判定する
+            CanShutdown = IsMethodInherited(nameof(OnShutdown));
+            CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+        }
+
+        /// <summary>
+        /// メソッドが派生クラスに実装されているかどうかを判定します。
+        /// </summary>
+        /// <param name="methodName">確認対象のメソッド名。</param>
+        /// <returns>メソッドが派生クラスに実装されている場合は <c>true</c>、それ以外は <c>false</c>。</returns>
+        protected bool IsMethodInherited(string methodName)
+        {
+            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // 当該メソッドが自分でないクラスに実装され、かつ、virturl である場合は true
+            if ((method.DeclaringType != typeof(ServiceBase).BaseType) && (method.IsVirtual == true))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryInstall(ServiceInstallParameter serviceInstallParameter = null)
@@ -38,7 +65,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             if (mode == "/install")
             {
-                if (Apis.IsServiceExists(serviceInstallParameter.ServiceName) == true)
+                if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) == true)
                 {
                     Console.Error.WriteLine("すでにインストールされています。");
                     ExitCode = 1;
@@ -49,7 +76,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
                     {
                         new IntegratedServiceInstaller().Install(serviceInstallParameter);
 
-                        if (Apis.IsServiceExists(serviceInstallParameter.ServiceName) == true)
+                        if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) == true)
                         {
                             ExitCode = 0;
                         }
@@ -69,7 +96,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
             else if (mode == "/uninstall")
             {
-                if (Apis.IsServiceExists(serviceInstallParameter.ServiceName) != true)
+                if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) != true)
                 {
                     Console.Error.WriteLine("サービスがインストールされていません。");
                     ExitCode = 1;
@@ -79,7 +106,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
                     try
                     {
                         new IntegratedServiceInstaller().Uninstall(serviceInstallParameter);
-                        if (Apis.IsServiceExists(serviceInstallParameter.ServiceName) != true)
+                        if (Apis.ServiceProcess.IsServiceExists(serviceInstallParameter.ServiceName) != true)
                         {
                             ExitCode = 0;
                         }

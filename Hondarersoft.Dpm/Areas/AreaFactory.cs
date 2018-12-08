@@ -89,7 +89,7 @@ namespace Hondarersoft.Dpm.Areas
 
                 string mmfName = GetMmfName(name, isGlobal);
 
-                if (Apis.MemoryMappedFileExists(mmfName) != true)
+                if (Apis.Areas.MemoryMappedFileExists(mmfName) != true)
                 {
                     Console.WriteLine("MemoryMappedFile not exists.");
                     throw new Exception();

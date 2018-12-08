@@ -5,9 +5,9 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.Apis
 {
-    public static partial class Apis
+    public static partial class Principal
     {
         private static object lock_IsAdministrator = new object();
 

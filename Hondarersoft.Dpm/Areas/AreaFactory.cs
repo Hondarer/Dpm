@@ -9,6 +9,9 @@ namespace Hondarersoft.Dpm.Areas
 {
     public class AreaFactory
     {
+        public const long BLOCK_ONE = 1;
+        public const long RECORD_ONE = 1;
+
         protected const string MMF_HEAD = "Dpm.AreaData_";
 
         protected static readonly object lockObject = new object();
@@ -48,6 +51,16 @@ namespace Hondarersoft.Dpm.Areas
             mmfName = string.Concat(mmfName, name);
 
             return mmfName;
+        }
+
+        public AreaAccessor CreateArea(string name, long blocks, long records, string assemblyFile, string className, bool isGlobal = true, bool isQueue = false)
+        {
+            return CreateArea(name, blocks, records, Apis.Areas.GetStructSize(assemblyFile, className), isGlobal, isQueue);
+        }
+
+        public AreaAccessor CreateArea(string name, long blocks, long records, Type recordType, bool isGlobal = true, bool isQueue = false)
+        {
+            return CreateArea(name, blocks, records, Marshal.SizeOf(recordType), isGlobal, isQueue);
         }
 
         public AreaAccessor CreateArea(string name, long blocks, long records, long recordlength, bool isGlobal = true, bool isQueue = false)

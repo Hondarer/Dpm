@@ -23,7 +23,6 @@ namespace Hondarersoft.Dpm
 
         static void Main(string[] args)
         {
-            //Console.WriteLine(Apis.Areas.GetStructSize("Hondarersoft.dpm.dll", "Hondarersoft.Dpm.PInvoke+SERVICE_STATUS_PROCESS"));
 
             if (Apis.Principal.IsAdministrator() != true)
             {
@@ -45,7 +44,7 @@ namespace Hondarersoft.Dpm
                 return;
             }
 
-            AreaFactory.Instance.CreateArea("TestMemory", 1, 1, Marshal.SizeOf(typeof(TestStruct)), true);
+            AreaFactory.Instance.CreateArea("TestMemory", 1, 1, typeof(TestStruct), true);
 
             TestStruct testStruct = new TestStruct
             {

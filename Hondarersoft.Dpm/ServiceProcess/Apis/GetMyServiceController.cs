@@ -5,7 +5,7 @@ namespace Hondarersoft.Dpm.Apis
 {
     public static partial class ServiceProcess
     {
-        public static ServiceController GetMyServiceController()
+        public static ServiceController GetServiceControllerMyself()
         {
             int myPid = Process.GetCurrentProcess().Id;
 

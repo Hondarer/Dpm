@@ -1,4 +1,4 @@
-# dpm
+# Hondarersoft.Dpm
 
 Distributed process management framework
 

@@ -1,17 +1,19 @@
 ﻿using Hondarersoft.Dpm.ServiceProcess;
+using System.Collections.Generic;
 
 namespace Hondarersoft.Dpm
 {
-    public class EmptyService : DpmServiceBase
+    public class DpmEmptyService : DpmServiceBase
     {
         public static int Main(string[] args)
         {
-            EmptyService instance = new EmptyService();
+            DpmEmptyService instance = new DpmEmptyService();
 
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
                 DisplayName = "Empty Service",
-                Description = "Description of Empty Service"
+                Description = "Description of Empty Service",
+                ExecutableUsers = new List<string>() { "everyone" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)
@@ -24,7 +26,7 @@ namespace Hondarersoft.Dpm
             return instance.ExitCode;
         }
 
-        public EmptyService() : base()
+        public DpmEmptyService() : base()
         {
             //CanStop = false; // The default is true.
             //AutoLog = false; // The default is true.

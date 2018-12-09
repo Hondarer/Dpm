@@ -13,7 +13,7 @@ using Hondarersoft.Dpm.Areas;
 
 namespace Hondarersoft.Dpm
 {
-    class AreaManager
+    class DpmAreaManager
     {
         internal struct TestStruct
         {

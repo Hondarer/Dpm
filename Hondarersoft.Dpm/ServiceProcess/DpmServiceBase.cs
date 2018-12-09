@@ -36,6 +36,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             InstanceID = Args.GetValue("InstanceID");
             ServiceBaseName = GetType().Name;
+
             if (string.IsNullOrEmpty(InstanceID) != true)
             {
                 ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
@@ -77,7 +78,12 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             if (Args.HasKey("Install"))
             {
-                if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
+                if (Apis.Principal.IsAdministrator() != true)
+                {
+                    Console.Error.WriteLine("You are not Administrator.");
+                    ExitCode = 1;
+                }
+                else if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
                 {
                     Console.Error.WriteLine(Resources.Resource.SERVICE_ALREADY_INSTALLED);
                     ExitCode = 1;
@@ -108,7 +114,12 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
             else if (Args.HasKey("Uninstall"))
             {
-                if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
+                if (Apis.Principal.IsAdministrator() != true)
+                {
+                    Console.Error.WriteLine("You are not Administrator.");
+                    ExitCode = 1;
+                }
+                else if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
                 {
                     Console.Error.WriteLine(Resources.Resource.SERVICE_ISNOT_INSTALLED);
                     ExitCode = 1;
@@ -117,7 +128,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 {
                     try
                     {
-                        new IntegratedServiceInstaller().Uninstall(GetType().Name, InstanceID, serviceInstallParameter);
+                        new IntegratedServiceInstaller().Uninstall(GetType().Name, InstanceID);
                         if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
                         {
                             ExitCode = 0;

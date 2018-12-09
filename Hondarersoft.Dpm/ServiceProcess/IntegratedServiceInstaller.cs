@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Configuration.Install;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.ServiceProcess;
 
 namespace Hondarersoft.Dpm.ServiceProcess
@@ -91,20 +92,18 @@ namespace Hondarersoft.Dpm.ServiceProcess
             ListDictionary state = new ListDictionary();
             serviceInstaller.Install(state);
 
-            SetFailureActions(serviceIdentify.ServiceName, parameter);
+            SetFailureActions(serviceInstaller.Context, serviceIdentify.ServiceName, parameter);
+
+            SetServiceSecurity(serviceInstaller.Context, serviceIdentify.ServiceName, parameter);
 
             serviceInstaller.Context.LogMessage($"*** インストールが終了しました。{DateTime.Now}");
         }
 
-        public void Uninstall(string serviceBaseName, string instanceID, ServiceInstallParameter parameter)
+        public void Uninstall(string serviceBaseName, string instanceID)
         {
             if (string.IsNullOrEmpty(serviceBaseName) == true)
             {
                 throw new ArgumentException(nameof(serviceBaseName));
-            }
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(nameof(parameter));
             }
 
             ServiceIdentify serviceIdentify = new ServiceIdentify()
@@ -126,7 +125,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             serviceInstaller.Context.LogMessage($"*** アンインストールが終了しました。{DateTime.Now}");
         }
 
-        protected virtual void SetFailureActions(string serviceName, ServiceInstallParameter parameter)
+        protected virtual void SetFailureActions(InstallContext context, string serviceName, ServiceInstallParameter parameter)
         {
             if (string.IsNullOrEmpty(serviceName) == true)
             {
@@ -175,6 +174,32 @@ namespace Hondarersoft.Dpm.ServiceProcess
                         throw new Exception("Unknown error while setting failure actions.");
                     }
                 }
+            }
+        }
+
+        protected virtual void SetServiceSecurity(InstallContext context, string serviceName, ServiceInstallParameter parameter)
+        {
+            if (string.IsNullOrEmpty(serviceName) == true)
+            {
+                throw new ArgumentException(nameof(serviceName));
+            }
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            if (parameter.ExecutableUsers == null)
+            {
+                return;
+            }
+
+            ServiceController sc = new ServiceController(serviceName);
+
+            ServiceSecurity serviceSecurity = new ServiceSecurity(sc.ServiceHandle);
+
+            foreach (string userName in parameter.ExecutableUsers)
+            {
+                serviceSecurity.AddAccessRule(new ServiceAccessRule(userName, ServiceAccessRights.GENERIC_READ | ServiceAccessRights.GENERIC_EXECUTE, AccessControlType.Allow));
             }
         }
     }

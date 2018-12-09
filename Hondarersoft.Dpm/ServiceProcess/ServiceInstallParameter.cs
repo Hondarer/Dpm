@@ -59,5 +59,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
         public string CommandlineOfFailure { get; set; }
 
         public string RebootMessageOfFailure { get; set; }
+
+        public List<string> ExecutableUsers { get; set; }
     }
 }

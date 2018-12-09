@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
@@ -44,7 +45,7 @@ namespace Hondarersoft.Dpm
                 return;
             }
 
-            AreaFactory.Instance.CreateArea("TestMemory", 1024, true);
+            AreaFactory.Instance.CreateArea("TestMemory", 1, 1, Marshal.SizeOf(typeof(TestStruct)), true);
 
             TestStruct testStruct = new TestStruct
             {

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public abstract class DpmServiceBase : System.ServiceProcess.ServiceBase
+    public class DpmServiceBase : System.ServiceProcess.ServiceBase
     {
         public ProcessArgs Args { get; private set; }
 

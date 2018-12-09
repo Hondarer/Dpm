@@ -46,6 +46,7 @@
     <Compile Include="Areas\Apis\GetStructSize.cs" />
     <Compile Include="Areas\AreaAccessor.cs" />
     <Compile Include="Areas\AreaManageData.cs" />
+    <Compile Include="PInvoke\Path.cs" />
     <Compile Include="Principal\Apis\IsAdministrator.cs" />
     <Compile Include="Areas\Apis\MemoryMappedFileExists.cs" />
     <Compile Include="Areas\AreaFactory.cs" />

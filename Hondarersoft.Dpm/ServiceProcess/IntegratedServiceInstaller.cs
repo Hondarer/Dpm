@@ -18,6 +18,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 throw new ArgumentException(nameof(serviceBaseName));
             }
+
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
@@ -131,6 +132,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 throw new ArgumentException(nameof(serviceName));
             }
+
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
@@ -183,6 +185,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 throw new ArgumentException(nameof(serviceName));
             }
+
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));

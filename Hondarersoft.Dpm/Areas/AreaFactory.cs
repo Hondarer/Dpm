@@ -121,8 +121,7 @@ namespace Hondarersoft.Dpm.Areas
 
                 if (Apis.Areas.MemoryMappedFileExists(mmfName) != true)
                 {
-                    Console.WriteLine("MemoryMappedFile not exists.");
-                    throw new Exception();
+                    throw new IOException("MemoryMappedFile not exists.");
                 }
 
                 AreaManageData areaManageData = new AreaManageData
@@ -134,7 +133,7 @@ namespace Hondarersoft.Dpm.Areas
 
                 areaManageData.HeaderAccessor.Read(0, out areaManageData.AreaFixedHeader);
 
-                Console.WriteLine($"size: {areaManageData.AreaFixedHeader.Blocks * areaManageData.AreaFixedHeader.Records * areaManageData.AreaFixedHeader.RecordLength}");
+                //Console.WriteLine($"size: {areaManageData.AreaFixedHeader.Blocks * areaManageData.AreaFixedHeader.Records * areaManageData.AreaFixedHeader.RecordLength}");
 
                 AreaVariableHeader areaVariableHeader;
                 areaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
@@ -145,12 +144,12 @@ namespace Hondarersoft.Dpm.Areas
                     memoryMappedFileDataAccess = MemoryMappedFileAccess.Read;
                 }
 
-                if ((areaManageData.AreaFixedHeader.IsQueue == true) || ((isReadOnly == false) && (areaVariableHeader.IsFreezed == false)))
+                if ((areaManageData.AreaFixedHeader.IsQueue == true) || (areaVariableHeader.IsFreezed == false))
                 {
                     areaManageData.SyncMutex = Apis.Sync.CreateClientMutex(GetAccessDataMutexKey(name), isGlobal);
                 }
 
-                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), areaManageData.AreaFixedHeader.Blocks* areaManageData.AreaFixedHeader.Records* areaManageData.AreaFixedHeader.RecordLength, memoryMappedFileDataAccess);
+                MemoryMappedViewAccessor dataMemoryMappedViewAccessor = areaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), areaManageData.AreaFixedHeader.Blocks * areaManageData.AreaFixedHeader.Records * areaManageData.AreaFixedHeader.RecordLength, memoryMappedFileDataAccess);
                 areaManageData.DataAccessor = new AreaAccessor(dataMemoryMappedViewAccessor, areaManageData);
 
                 manageDataDicionary.Add(name, areaManageData);

@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,6 +47,9 @@
     <Compile Include="Areas\Apis\GetStructSize.cs" />
     <Compile Include="Areas\AreaAccessor.cs" />
     <Compile Include="Areas\AreaManageData.cs" />
+    <Compile Include="Areas\AreaManagerCore.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PInvoke\Path.cs" />
     <Compile Include="Principal\Apis\IsAdministrator.cs" />
     <Compile Include="Areas\Apis\MemoryMappedFileExists.cs" />

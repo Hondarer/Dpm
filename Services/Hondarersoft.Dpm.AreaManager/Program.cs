@@ -1,19 +1,34 @@
-﻿using System;
+﻿using Hondarersoft.Dpm.Areas;
+using Hondarersoft.Dpm.ServiceProcess;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Hondarersoft.Dpm;
-using Hondarersoft.Dpm.Areas;
 
 namespace Hondarersoft.Dpm
 {
+    public class DpmAreaManager : AreaManagerCore
+    {
+        public static int Main(string[] args)
+        {
+            DpmAreaManager instance = new DpmAreaManager();
+
+            ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
+            {
+                DisplayName = "Area Manager",
+                Description = "Description of Area Manager",
+                ExecutableUsers = new List<string>() { "everyone" }
+            };
+
+            if (instance.TryInstall(serviceInstallParameter) == true)
+            {
+                return instance.ExitCode;
+            }
+
+            Run(instance);
+
+            return instance.ExitCode;
+        }
+    }
+
+#if false
     class DpmAreaManager
     {
         internal struct TestStruct
@@ -58,4 +73,5 @@ namespace Hondarersoft.Dpm
             Console.ReadLine();
         }
     }
+#endif
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.ServiceManager", "Services\Hondarer-soft.Dpm.ServiceManager\Hondarersoft.Dpm.ServiceManager.csproj", "{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.TimerManager", "Services\Hondarersoft.Dpm.TimerManager\Hondarersoft.Dpm.TimerManager.csproj", "{32EEBAE5-C1AA-4459-A451-33F5BF516F61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaManagerCoreTest", "Commands\AreaManagerCoreTest\AreaManagerCoreTest.csproj", "{B5080C5A-573D-4772-8291-8DEEA3F72B2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
 		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A} = {783D9DFF-7355-4FE2-AD6C-4D14D574DABC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CC36C60-D2B4-408D-9265-089E38C9A64B}

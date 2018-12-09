@@ -183,6 +183,9 @@ namespace Hondarersoft.Dpm.Areas
             }
         }
 
+        // TODO: record, block 指定化
+        // TODO: 待ちテーブルのメソッド実装
+
         public virtual void Read<T>(out T structure) where T : struct
         {
             OnPreviewRead();

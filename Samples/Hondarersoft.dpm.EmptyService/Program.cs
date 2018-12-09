@@ -30,6 +30,7 @@ namespace Hondarersoft.Dpm
         {
             //CanStop = false; // The default is true.
             //AutoLog = false; // The default is true.
+            //SupportInstanceID = true; // The default is false.
         }
 
         protected override void OnStart(string[] args)

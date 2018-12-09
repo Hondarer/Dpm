@@ -12,9 +12,77 @@ namespace Hondarersoft.Dpm.ServiceProcess
     {
         public ProcessArgs Args { get; private set; }
 
-        public string ServiceBaseName { get; private set; }
+        private string serviceBaseName=null;
 
-        public string InstanceID { get; private set; }
+        public string ServiceBaseName
+        {
+            get
+            {
+                return serviceBaseName;
+            }
+            protected set
+            {
+                serviceBaseName = value;
+
+                if ((SupportInstanceID == true) && (string.IsNullOrEmpty(InstanceID) != true))
+                {
+                    ServiceName = string.Concat(serviceBaseName, "_", InstanceID);
+                }
+                else
+                {
+                    ServiceName = serviceBaseName;
+                }
+            }
+        }
+
+        private bool supportInstanceID = false;
+
+        public bool SupportInstanceID
+        {
+            get
+            {
+                return supportInstanceID;
+            }
+            protected set
+            {
+                supportInstanceID = value;
+
+                if (supportInstanceID == false)
+                {
+                    ServiceName = ServiceBaseName;
+                }
+                else if (string.IsNullOrEmpty(InstanceID) != true)
+                {
+                    ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
+                }
+            }
+        }
+
+        private string instanceID=null;
+
+        public string InstanceID
+        {
+            get
+            {
+                if (supportInstanceID == false)
+                {
+                    return null;
+                }
+                return instanceID;
+            }
+            protected set
+            {
+                instanceID = value;
+
+                if (supportInstanceID == true)
+                {
+                    if (string.IsNullOrEmpty(instanceID) != true)
+                    {
+                        ServiceName = string.Concat(ServiceBaseName, "_", instanceID);
+                    }
+                }
+            }
+        }
 
         public new string ServiceName
         {
@@ -36,15 +104,6 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             InstanceID = Args.GetValue("InstanceID");
             ServiceBaseName = GetType().Name;
-
-            if (string.IsNullOrEmpty(InstanceID) != true)
-            {
-                ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
-            }
-            else
-            {
-                ServiceName = ServiceBaseName;
-            }
 
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));

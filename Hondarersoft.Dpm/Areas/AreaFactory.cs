@@ -75,7 +75,7 @@ namespace Hondarersoft.Dpm.Areas
                 MemoryMappedFileSecurity customSecurity = new MemoryMappedFileSecurity();
                 if (isGlobal == true)
                 {
-                    customSecurity.AddAccessRule(new AccessRule<MemoryMappedFileRights>("everyone", MemoryMappedFileRights.ReadWrite, AccessControlType.Allow));
+                    customSecurity.AddAccessRule(new AccessRule<MemoryMappedFileRights>("Everyone", MemoryMappedFileRights.ReadWrite, AccessControlType.Allow));
                 }
 
                 AreaManageData areaManageData = new AreaManageData

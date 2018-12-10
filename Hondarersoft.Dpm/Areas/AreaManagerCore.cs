@@ -1,9 +1,13 @@
-﻿using Hondarersoft.Dpm.ServiceProcess;
+﻿#define USE_IPC
+
+using Hondarersoft.Dpm.ServiceProcess;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,20 +16,38 @@ namespace Hondarersoft.Dpm.Areas
 {
     public class AreaManagerCore : DpmServiceBase
     {
-        public const string SERVICE_NAME = "DpmAreaManager";
 
-        private TcpChannel channel;
+#if USE_IPC
+        private IpcServerChannel serverChannel;
+#else
+        private TcpChannel serverChannel;
+#endif
 
         protected override void OnStart(string[] args)
         {
-            channel = new TcpChannel(AreaManagerService.SERVICE_PORT); // ポート番号に 0 を渡すと、動的割り当てができる。
+#if USE_IPC
+            IDictionary props = new Hashtable
+            {
+                ["name"] = AreaManagerService.SERVICE_NAME,
+                ["portName"] = AreaManagerService.SERVICE_NAME,
+                ["authorizedGroup"] = "Everyone"
+            };
+            serverChannel = new IpcServerChannel(props, null, null);
+            ChannelServices.RegisterChannel(serverChannel, true);
+            AreaManagerService areaManagerService = new AreaManagerService();
+            RemotingServices.Marshal(areaManagerService, nameof(AreaManagerService));
+#else
+            serverChannel = new TcpChannel(AreaManagerService.SERVICE_PORT); // ポート番号に 0 を渡すと、動的割り当てができる。
             ChannelServices.RegisterChannel(channel, false);
             AreaManagerService areaManagerService = new AreaManagerService();
             RemotingServices.Marshal(areaManagerService, nameof(AreaManagerService));
+#endif
 
             areaManagerService.OnTestCommand += AreaManagerService_OnTestCommand;
 
-            channel.StartListening(null);
+#if !USE_IPC
+            serverChannel.StartListening(null);
+#endif
 
             base.OnStart(args);
         }
@@ -37,7 +59,9 @@ namespace Hondarersoft.Dpm.Areas
 
         protected override void OnStop()
         {
-            channel.StopListening(null);
+#if !USE_IPC
+            serverChannel.StopListening(null);
+#endif
 
             ExitCode = 0;
 
@@ -47,7 +71,11 @@ namespace Hondarersoft.Dpm.Areas
 
     public class AreaManagerService : MarshalByRefObject
     {
+#if USE_IPC
+        public const string SERVICE_NAME = "DpmAreaManager";
+#else
         public const int SERVICE_PORT = 19000;
+#endif
 
         private static AreaManagerService client;
 
@@ -57,7 +85,11 @@ namespace Hondarersoft.Dpm.Areas
             {
                 if (client == null)
                 {
+#if USE_IPC
+                    client = (AreaManagerService)Activator.GetObject(typeof(AreaManagerService), $"ipc://{SERVICE_NAME}/{nameof(AreaManagerService)}");
+#else
                     client = (AreaManagerService)Activator.GetObject(typeof(AreaManagerService), $"tcp://localhost:{SERVICE_PORT}/{nameof(AreaManagerService)}");
+#endif
                 }
                 return client;
             }

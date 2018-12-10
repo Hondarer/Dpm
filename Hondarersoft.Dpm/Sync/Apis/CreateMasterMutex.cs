@@ -30,7 +30,7 @@ namespace Hondarersoft.Dpm.Apis
             MutexSecurity mutexSecurity = new MutexSecurity();
             if (isGlobal == true)
             {
-                mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+                mutexSecurity.AddAccessRule(new MutexAccessRule("Everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
             }
 
             try

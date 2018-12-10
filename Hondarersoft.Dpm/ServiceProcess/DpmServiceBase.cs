@@ -24,7 +24,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 serviceBaseName = value;
 
-                if ((SupportInstanceID == true) && (string.IsNullOrEmpty(InstanceID) != true))
+                if ((SupportMultiInstance == true) && (string.IsNullOrEmpty(InstanceID) != true))
                 {
                     ServiceName = string.Concat(serviceBaseName, "_", InstanceID);
                 }
@@ -35,19 +35,19 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        private bool supportInstanceID = false;
+        private bool supportMultiInstance = false;
 
-        public bool SupportInstanceID
+        public bool SupportMultiInstance
         {
             get
             {
-                return supportInstanceID;
+                return supportMultiInstance;
             }
             protected set
             {
-                supportInstanceID = value;
+                supportMultiInstance = value;
 
-                if (supportInstanceID == false)
+                if (supportMultiInstance == false)
                 {
                     ServiceName = ServiceBaseName;
                 }
@@ -64,7 +64,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
         {
             get
             {
-                if (supportInstanceID == false)
+                if (supportMultiInstance == false)
                 {
                     return null;
                 }
@@ -74,7 +74,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 instanceID = value;
 
-                if (supportInstanceID == true)
+                if (supportMultiInstance == true)
                 {
                     if (string.IsNullOrEmpty(instanceID) != true)
                     {

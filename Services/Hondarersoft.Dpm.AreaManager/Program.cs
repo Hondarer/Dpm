@@ -14,7 +14,7 @@ namespace Hondarersoft.Dpm
             {
                 DisplayName = "Area Manager",
                 Description = "Description of Area Manager",
-                ExecutableUsers = new List<string>() { "everyone" }
+                ExecutableUsers = new List<string>() { "Everyone" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)

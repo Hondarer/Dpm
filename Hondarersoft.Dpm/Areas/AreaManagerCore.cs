@@ -46,26 +46,24 @@ namespace Hondarersoft.Dpm.Areas
             areaManagerService.OnTestCommand += AreaManagerService_OnTestCommand;
 
 #if !USE_IPC
-            serverChannel.StartListening(null);
+            serverChannel.StartListening(null); // IPC の場合は、初回生成時は既に待ち受けを開始している
 #endif
 
             base.OnStart(args);
         }
 
-        private void AreaManagerService_OnTestCommand(object sender, AreaManagerService.TestCommandEventArgs eventArgs)
-        {
-            EventLog.WriteEntry($"OnTestCommand: {eventArgs.Command}");
-        }
-
         protected override void OnStop()
         {
-#if !USE_IPC
             serverChannel.StopListening(null);
-#endif
 
             ExitCode = 0;
 
             base.OnStop();
+        }
+
+        private void AreaManagerService_OnTestCommand(object sender, AreaManagerService.TestCommandEventArgs eventArgs)
+        {
+            EventLog.WriteEntry($"OnTestCommand: {eventArgs.Command}");
         }
     }
 

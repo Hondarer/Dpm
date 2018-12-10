@@ -96,6 +96,12 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
+        // TODO: Remoting 関連の処理への挿入は未実施
+
+        public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
+
+        public int TcpServicePort { get; protected set; } = 0;
+
         public DpmServiceBase()
         {
             Args = new ProcessArgs(System.Environment.GetCommandLineArgs());

@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}</ProjectGuid>
+    <ProjectGuid>{B5080C5A-573D-4772-8291-8DEEA3F72B2A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Hondarersoft.Dpm</RootNamespace>
-    <AssemblyName>DpmAreaManager</AssemblyName>
+    <RootNamespace>AreaManagerCoreTest</RootNamespace>
+    <AssemblyName>AreaManagerCoreTest</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,7 +38,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,9 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DpmAreaManager.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Hondarersoft.Dpm\Hondarersoft.Dpm.csproj">
-      <Project>{3bc6b9f7-f637-4114-8bfd-971c9b496039}</Project>
+      <Project>{3BC6B9F7-F637-4114-8BFD-971C9B496039}</Project>
       <Name>Hondarersoft.Dpm</Name>
     </ProjectReference>
   </ItemGroup>

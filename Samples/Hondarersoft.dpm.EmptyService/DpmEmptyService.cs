@@ -9,11 +9,13 @@ namespace Hondarersoft.Dpm
         {
             DpmEmptyService instance = new DpmEmptyService();
 
+            #region Region for self install
+
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                DisplayName = "Empty Service",
-                Description = "Description of Empty Service",
-                ExecutableUsers = new List<string>() { "everyone" }
+                DisplayName = "Empty service",
+                Description = "Sample of empty service",
+                ExecutableUsers = new List<string>() { "Everyone" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)
@@ -21,27 +23,11 @@ namespace Hondarersoft.Dpm
                 return instance.ExitCode;
             }
 
+            #endregion
+
             Run(instance);
 
             return instance.ExitCode;
-        }
-
-        public DpmEmptyService() : base()
-        {
-            //CanStop = false; // The default is true.
-            //AutoLog = false; // The default is true.
-        }
-
-        protected override void OnStart(string[] args)
-        {
-            base.OnStart(args);
-        }
-
-        protected override void OnStop()
-        {
-            ExitCode = 0;
-
-            base.OnStop();
         }
     }
 }

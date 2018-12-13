@@ -24,11 +24,26 @@ namespace Hondarersoft.Dpm.Areas
     {
         public bool IsFreezed { get; set; }
 
+        public DateTime LastUpdated { get; set; }
+
+        public long AvailableBlocks { get; set; }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AreaBlockHeader
+    {
+        public long AvailableRecords { get; set; }
 
         public DateTime LastUpdated { get; set; }
 
         public long ReadPointer { get; set; }
 
         public long WritePointer { get; set; }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AreaRecordHeader
+    {
+        public DateTime LastUpdated { get; set; }
     }
 }

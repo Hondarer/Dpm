@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Apis
 {
@@ -12,7 +8,7 @@ namespace Hondarersoft.Dpm.Apis
     {
         public static int GetStructSize(string assemblyFile, string name)
         {
-            Assembly assm = Assembly.LoadFrom(assemblyFile); // e.g. "Hondarersoft.dpm.dll"
+            Assembly assm = Assembly.LoadFrom(assemblyFile); // e.g. "Hondarersoft.Dpm.dll"
 
             Type type = assm.GetType(name); // e.g. "Hondarersoft.Dpm.PInvoke+SERVICE_STATUS_PROCESS"
 

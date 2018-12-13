@@ -34,15 +34,15 @@ namespace Hondarersoft.Dpm.Areas
                 AreaManageData.SyncMutex.WaitOne();
 
                 AreaVariableHeader areaVariableHeader;
-                AreaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
+                AreaManageData.HeaderAccessor.Read(AreaManageData.GetVariableHeaderOffset(), out areaVariableHeader);
                 if (areaVariableHeader.IsFreezed == false)
                 {
                     areaVariableHeader.IsFreezed = true;
                     areaVariableHeader.LastUpdated = DateTime.UtcNow;
-                    AreaManageData.HeaderAccessor.Write(Marshal.SizeOf(typeof(AreaFixedHeader)), ref areaVariableHeader);
+                    AreaManageData.HeaderAccessor.Write(AreaManageData.GetVariableHeaderOffset(), ref areaVariableHeader);
 
                     MemoryMappedViewAccessor.Dispose();
-                    MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), AreaManageData.AreaFixedHeader.Blocks * AreaManageData.AreaFixedHeader.Records * AreaManageData.AreaFixedHeader.RecordLength, MemoryMappedFileAccess.Read);
+                    MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(AreaManageData.GetHeaderTotalLength(), AreaManageData.GetDataTotalLength(), MemoryMappedFileAccess.Read);
 
                     Mutex _mutex = AreaManageData.SyncMutex;
                     AreaManageData.SyncMutex = null;
@@ -69,13 +69,13 @@ namespace Hondarersoft.Dpm.Areas
                 AreaManageData.SyncMutex.WaitOne();
 
                 AreaVariableHeader areaVariableHeader;
-                AreaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
+                AreaManageData.HeaderAccessor.Read(AreaManageData.GetVariableHeaderOffset(), out areaVariableHeader);
                 if (areaVariableHeader.IsFreezed == true)
                 {
                     if (MemoryMappedViewAccessor.CanWrite == true)
                     {
                         MemoryMappedViewAccessor.Dispose();
-                        MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), AreaManageData.AreaFixedHeader.Blocks * AreaManageData.AreaFixedHeader.Records * AreaManageData.AreaFixedHeader.RecordLength, MemoryMappedFileAccess.Read);
+                        MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(AreaManageData.GetHeaderTotalLength(), AreaManageData.GetDataTotalLength(), MemoryMappedFileAccess.Read);
                     }
 
                     Mutex _mutex = AreaManageData.SyncMutex;
@@ -106,13 +106,13 @@ namespace Hondarersoft.Dpm.Areas
                 AreaManageData.SyncMutex.WaitOne();
 
                 AreaVariableHeader areaVariableHeader;
-                AreaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
+                AreaManageData.HeaderAccessor.Read(AreaManageData.GetVariableHeaderOffset(), out areaVariableHeader);
                 if (areaVariableHeader.IsFreezed == true)
                 {
                     if (MemoryMappedViewAccessor.CanWrite == true)
                     {
                         MemoryMappedViewAccessor.Dispose();
-                        MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), AreaManageData.AreaFixedHeader.Blocks * AreaManageData.AreaFixedHeader.Records * AreaManageData.AreaFixedHeader.RecordLength, MemoryMappedFileAccess.Read);
+                        MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(AreaManageData.GetHeaderTotalLength(), AreaManageData.GetDataTotalLength(), MemoryMappedFileAccess.Read);
                     }
 
                     Mutex _mutex = AreaManageData.SyncMutex;
@@ -130,7 +130,7 @@ namespace Hondarersoft.Dpm.Areas
             }
         }
 
-        protected virtual void OnPreviewWrite(out AreaVariableHeader areaVariableHeader)
+        protected virtual void OnPreviewWrite(out DateTime lastUpdated, out AreaVariableHeader areaVariableHeader)
         {
             if (MemoryMappedViewAccessor.CanWrite == false)
             {
@@ -142,11 +142,11 @@ namespace Hondarersoft.Dpm.Areas
                 AreaManageData.SyncMutex.WaitOne();
             }
 
-            AreaManageData.HeaderAccessor.Read(Marshal.SizeOf(typeof(AreaFixedHeader)), out areaVariableHeader);
+            AreaManageData.HeaderAccessor.Read(AreaManageData.GetVariableHeaderOffset(), out areaVariableHeader);
             if (areaVariableHeader.IsFreezed == true)
             {
                 MemoryMappedViewAccessor.Dispose();
-                MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(Marshal.SizeOf(typeof(AreaFixedHeader)) + Marshal.SizeOf(typeof(AreaVariableHeader)), AreaManageData.AreaFixedHeader.Blocks * AreaManageData.AreaFixedHeader.Records * AreaManageData.AreaFixedHeader.RecordLength, MemoryMappedFileAccess.Read);
+                MemoryMappedViewAccessor = AreaManageData.MemoryMappedFile.CreateViewAccessor(AreaManageData.GetHeaderTotalLength(), AreaManageData.GetDataTotalLength(), MemoryMappedFileAccess.Read);
 
                 Mutex _mutex = AreaManageData.SyncMutex;
                 AreaManageData.SyncMutex = null;
@@ -154,18 +154,33 @@ namespace Hondarersoft.Dpm.Areas
 
                 throw new InvalidOperationException("Area is freezed.");
             }
+
+            lastUpdated = DateTime.UtcNow;
         }
 
-        protected virtual void OnAfterWrite(ref AreaVariableHeader areaVariableHeader)
+        protected virtual void OnBlockWrite(ref DateTime lastUpdated, long block)
         {
-            areaVariableHeader.LastUpdated = DateTime.UtcNow;
-            AreaManageData.HeaderAccessor.Write(Marshal.SizeOf(typeof(AreaFixedHeader)), ref areaVariableHeader);
+            AreaManageData.HeaderAccessor.Write(AreaManageData.GetBlockHeaderOffset(block) + (long)Marshal.OffsetOf<AreaBlockHeader>(nameof(AreaBlockHeader.LastUpdated)), ref lastUpdated);
+        }
+
+        protected virtual void OnRecordWrite(ref DateTime lastUpdated,long block,long record)
+        {
+            AreaManageData.HeaderAccessor.Write(AreaManageData.GetRecordHeaderOffset(block, record) + (long)Marshal.OffsetOf<AreaRecordHeader>(nameof(AreaRecordHeader.LastUpdated)), ref lastUpdated);
+        }
+
+        protected virtual void OnAfterWrite(ref DateTime lastUpdated, ref AreaVariableHeader areaVariableHeader)
+        {
+            areaVariableHeader.LastUpdated = lastUpdated;
+            AreaManageData.HeaderAccessor.Write(AreaManageData.GetVariableHeaderOffset(), ref areaVariableHeader);
 
             if (AreaManageData.SyncMutex != null)
             {
                 AreaManageData.SyncMutex.ReleaseMutex();
             }
         }
+
+        // TODO: record, block 指定化
+        // TODO: 待ちテーブルのメソッド実装
 
         public virtual void Read<T>(out T structure) where T : struct
         {
@@ -183,15 +198,37 @@ namespace Hondarersoft.Dpm.Areas
 
         public virtual void Write<T>(ref T structure) where T : struct
         {
-            OnPreviewWrite(out AreaVariableHeader areaVariableHeader);
+            OnPreviewWrite(out DateTime lastUpdated, out AreaVariableHeader areaVariableHeader);
 
             try
             {
                 MemoryMappedViewAccessor.Write(0, ref structure);
+                OnRecordWrite(ref lastUpdated, 1, 1);
+                OnBlockWrite(ref lastUpdated, 1);
             }
             finally
             {
-                OnAfterWrite(ref areaVariableHeader);
+                OnAfterWrite(ref lastUpdated, ref areaVariableHeader);
+            }
+        }
+
+        public virtual void Enqueue<T>(long block, ref T structure) where T : struct
+        {
+            OnPreviewWrite(out DateTime lastUpdated, out AreaVariableHeader areaVariableHeader);
+
+            try
+            {
+                // TODO: 当該ブロックのポインターを読む
+                // TODO: 書き込み可能なレコードを特定する
+                // TODO: 書き込みを行う
+
+                MemoryMappedViewAccessor.Write(0, ref structure);
+                OnRecordWrite(ref lastUpdated, 1, 1);
+                OnBlockWrite(ref lastUpdated, 1);
+            }
+            finally
+            {
+                OnAfterWrite(ref lastUpdated, ref areaVariableHeader);
             }
         }
     }

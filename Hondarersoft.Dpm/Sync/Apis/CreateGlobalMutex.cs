@@ -11,7 +11,7 @@ namespace Hondarersoft.Dpm.Apis
             string mutexName = GetMutexName(name, true);
 
             MutexSecurity mutexSecurity = new MutexSecurity();
-            mutexSecurity.AddAccessRule(new MutexAccessRule("everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+            mutexSecurity.AddAccessRule(new MutexAccessRule("Everyone", MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
 
             bool createNew;
             mutex = new Mutex(false, mutexName, out createNew, mutexSecurity);

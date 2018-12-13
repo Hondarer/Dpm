@@ -4,17 +4,91 @@
 
 using Hondarersoft.Dpm.Environment;
 using System;
+using System.Collections;
 using System.Reflection;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public abstract class DpmServiceBase : System.ServiceProcess.ServiceBase
+    public class DpmServiceBase : System.ServiceProcess.ServiceBase
     {
         public ProcessArgs Args { get; private set; }
 
-        public string ServiceBaseName { get; private set; }
+        private string serviceBaseName = null;
 
-        public string InstanceID { get; private set; }
+        public string ServiceBaseName
+        {
+            get
+            {
+                return serviceBaseName;
+            }
+            protected set
+            {
+                serviceBaseName = value;
+
+                if ((SupportMultiInstance == true) && (string.IsNullOrEmpty(InstanceID) != true))
+                {
+                    ServiceName = string.Concat(serviceBaseName, "_", InstanceID);
+                }
+                else
+                {
+                    ServiceName = serviceBaseName;
+                }
+            }
+        }
+
+        private bool supportMultiInstance = false;
+
+        public bool SupportMultiInstance
+        {
+            get
+            {
+                return supportMultiInstance;
+            }
+            protected set
+            {
+                supportMultiInstance = value;
+
+                if (supportMultiInstance == false)
+                {
+                    ServiceName = ServiceBaseName;
+                }
+                else if (string.IsNullOrEmpty(InstanceID) != true)
+                {
+                    ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
+                }
+            }
+        }
+
+        private string instanceID = null;
+
+        public string InstanceID
+        {
+            get
+            {
+                if (supportMultiInstance == false)
+                {
+                    return null;
+                }
+                return instanceID;
+            }
+            protected set
+            {
+                instanceID = value;
+
+                if (supportMultiInstance == true)
+                {
+                    if (string.IsNullOrEmpty(instanceID) != true)
+                    {
+                        ServiceName = string.Concat(ServiceBaseName, "_", instanceID);
+                    }
+                }
+            }
+        }
 
         public new string ServiceName
         {
@@ -28,6 +102,14 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
+        // TODO: IPC と TCP の共存は試していない
+
+        public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
+
+        public int TcpServicePort { get; protected set; } = 0;
+
+        protected IpcServerChannel ipcServerChannel;
+
         public DpmServiceBase()
         {
             Args = new ProcessArgs(System.Environment.GetCommandLineArgs());
@@ -37,18 +119,83 @@ namespace Hondarersoft.Dpm.ServiceProcess
             InstanceID = Args.GetValue("InstanceID");
             ServiceBaseName = GetType().Name;
 
-            if (string.IsNullOrEmpty(InstanceID) != true)
-            {
-                ServiceName = string.Concat(ServiceBaseName, "_", InstanceID);
-            }
-            else
-            {
-                ServiceName = ServiceBaseName;
-            }
+            //CanStop = false; // The default is true.
+            //AutoLog = false; // The default is true.
+            //SupportInstanceID = true; // The default is false.
 
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+        }
+
+        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = (()=>{ return new RemoteCommandService(); });
+
+        protected override void OnStart(string[] args)
+        {
+            if (RemoteCommandSupport == RemoteCommandSupports.Ipc)
+            {
+                //// Local administrators sid
+                //SecurityIdentifier localAdminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
+
+                //// Local Power users sid
+                //SecurityIdentifier powerUsersSid = new SecurityIdentifier(WellKnownSidType.BuiltinPowerUsersSid, null);
+
+                // Everyone users sid
+                SecurityIdentifier everoneSid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+
+                //// Network sid
+                //SecurityIdentifier networkSid = new SecurityIdentifier(@"S-1-5-2");
+
+                DiscretionaryAcl dacl = new DiscretionaryAcl(false, false, 1);
+
+                //// Disallow access
+                //dacl.AddAccess(AccessControlType.Deny, networkSid, -1, InheritanceFlags.None, PropagationFlags.None);
+
+                //// Allow acces
+                //dacl.AddAccess(AccessControlType.Allow, localAdminSid, -1, InheritanceFlags.None, PropagationFlags.None);
+                //dacl.AddAccess(AccessControlType.Allow, powerUsersSid, -1, InheritanceFlags.None, PropagationFlags.None);
+                dacl.AddAccess(AccessControlType.Allow, everoneSid, -1, InheritanceFlags.None, PropagationFlags.None);
+
+                CommonSecurityDescriptor securityDescriptor =
+                    new CommonSecurityDescriptor(false, false,
+                        ControlFlags.GroupDefaulted |
+                        ControlFlags.OwnerDefaulted |
+                        ControlFlags.DiscretionaryAclPresent,
+                        null, null, null, dacl);
+
+                IDictionary props = new Hashtable
+                {
+                    ["name"] = ServiceName,
+                    ["portName"] = ServiceName
+                };
+
+                ipcServerChannel = new IpcServerChannel(props, null, securityDescriptor);
+                ChannelServices.RegisterChannel(ipcServerChannel, true);
+                RemoteCommandService remoteCommandService = new RemoteCommandService();
+
+                remoteCommandService.OnRemoteCommand += OnRemoteCommand;
+
+                RemotingServices.Marshal(remoteCommandService, remoteCommandService.GetType().Name);
+            }
+
+            base.OnStart(args);
+        }
+
+        // TODO: Pause/Continue の際に、リモーティングサービスを停止させる
+
+        protected override void OnStop()
+        {
+            // Set default exit code.
+            // If another ExitCode is set in a derived class,
+            // it is necessary to consider whether to call this method.
+            ExitCode = 0;
+
+            base.OnStop();
+        }
+
+        protected virtual object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
+        {
+            return null;
         }
 
         /// <summary>
@@ -76,7 +223,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 serviceInstallParameter = new ServiceInstallParameter();
             }
 
-            if (Args.HasKey("Install"))
+            if (Args.HasKey("Install") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {
@@ -112,7 +259,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 return true;
             }
-            else if (Args.HasKey("Uninstall"))
+            else if (Args.HasKey("Uninstall") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {

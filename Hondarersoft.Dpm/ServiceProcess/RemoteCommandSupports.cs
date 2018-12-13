@@ -8,7 +8,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 {
     public enum RemoteCommandSupports
     {
-        None=0,
+        None = 0,
         Ipc,
         Tcp,
         Both

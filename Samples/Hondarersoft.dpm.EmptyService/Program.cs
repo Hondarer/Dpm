@@ -13,7 +13,7 @@ namespace Hondarersoft.Dpm
             {
                 DisplayName = "Empty Service",
                 Description = "Description of Empty Service",
-                ExecutableUsers = new List<string>() { "Everyone" }
+                ExecutableUsers = new List<string>() { "Everyone" } // TODO: 設定時の例外補足が甘い気がする
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)
@@ -32,18 +32,6 @@ namespace Hondarersoft.Dpm
             //AutoLog = false; // The default is true.
             //SupportInstanceID = true; // The default is false.
             RemoteCommandSupport = RemoteCommandSupports.Ipc;
-        }
-
-        protected override void OnStart(string[] args)
-        {
-            base.OnStart(args);
-        }
-
-        protected override void OnStop()
-        {
-            ExitCode = 0;
-
-            base.OnStop();
         }
 
         protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)

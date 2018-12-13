@@ -128,11 +128,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         protected override void OnStart(string[] args)
         {
-            if(RemoteCommandSupport == RemoteCommandSupports.Ipc)
+            if (RemoteCommandSupport == RemoteCommandSupports.Ipc)
             {
-                //// This is the wellknown sid for network sid
-                //string networkSidSddlForm = @"S-1-5-2";
-
                 //// Local administrators sid
                 //SecurityIdentifier localAdminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
 
@@ -143,14 +140,14 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 SecurityIdentifier everoneSid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
                 //// Network sid
-                //SecurityIdentifier networkSid = new SecurityIdentifier(networkSidSddlForm);
+                //SecurityIdentifier networkSid = new SecurityIdentifier(@"S-1-5-2");
 
                 DiscretionaryAcl dacl = new DiscretionaryAcl(false, false, 1);
 
-                //// Disallow access from off machine
+                //// Disallow access
                 //dacl.AddAccess(AccessControlType.Deny, networkSid, -1, InheritanceFlags.None, PropagationFlags.None);
 
-                //// Allow acces only from local administrators and power users
+                //// Allow acces
                 //dacl.AddAccess(AccessControlType.Allow, localAdminSid, -1, InheritanceFlags.None, PropagationFlags.None);
                 //dacl.AddAccess(AccessControlType.Allow, powerUsersSid, -1, InheritanceFlags.None, PropagationFlags.None);
                 dacl.AddAccess(AccessControlType.Allow, everoneSid, -1, InheritanceFlags.None, PropagationFlags.None);

@@ -5,6 +5,7 @@ using Hondarersoft.Dpm.ServiceProcess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Text;
@@ -16,19 +17,19 @@ namespace AreaManagerCoreTest
     {
         static void Main(string[] args)
         {
-            try
-            {
 #if USE_IPC
                 InitializeIpcClientChannel();
 #endif
 
                 RemoteCommandService client = GetIpcRemoteClient<RemoteCommandService>("DpmEmptyService");
 
+            try
+            {
                 client.RemoteCommand(1, "ABCD");
             }
-            catch (Exception ex)
+            catch (RemotingException ex)
             {
-                Console.Error.WriteLine($"Exception:\r\n{ex}");
+                Console.Error.WriteLine($"RemotingException:\r\n{ex}");
             }
         }
 

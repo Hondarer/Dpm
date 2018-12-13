@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
@@ -137,10 +139,13 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 //// Local Power users sid
                 //SecurityIdentifier powerUsersSid = new SecurityIdentifier(WellKnownSidType.BuiltinPowerUsersSid, null);
 
+                // Everyone users sid
+                SecurityIdentifier everoneSid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+
                 //// Network sid
                 //SecurityIdentifier networkSid = new SecurityIdentifier(networkSidSddlForm);
 
-                //DiscretionaryAcl dacl = new DiscretionaryAcl(false, false, 1);
+                DiscretionaryAcl dacl = new DiscretionaryAcl(false, false, 1);
 
                 //// Disallow access from off machine
                 //dacl.AddAccess(AccessControlType.Deny, networkSid, -1, InheritanceFlags.None, PropagationFlags.None);
@@ -148,25 +153,22 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 //// Allow acces only from local administrators and power users
                 //dacl.AddAccess(AccessControlType.Allow, localAdminSid, -1, InheritanceFlags.None, PropagationFlags.None);
                 //dacl.AddAccess(AccessControlType.Allow, powerUsersSid, -1, InheritanceFlags.None, PropagationFlags.None);
+                dacl.AddAccess(AccessControlType.Allow, everoneSid, -1, InheritanceFlags.None, PropagationFlags.None);
 
-                //CommonSecurityDescriptor securityDescriptor =
-                //    new CommonSecurityDescriptor(false, false,
-                //            ControlFlags.GroupDefaulted |
-                //            ControlFlags.OwnerDefaulted |
-                //            ControlFlags.DiscretionaryAclPresent,
-                //            null, null, null, dacl);
-
-                //// IPC Channelを作成
-                //_ipcChannel = new IpcServerChannel(props, null, securityDescriptor);
+                CommonSecurityDescriptor securityDescriptor =
+                    new CommonSecurityDescriptor(false, false,
+                        ControlFlags.GroupDefaulted |
+                        ControlFlags.OwnerDefaulted |
+                        ControlFlags.DiscretionaryAclPresent,
+                        null, null, null, dacl);
 
                 IDictionary props = new Hashtable
                 {
                     ["name"] = ServiceName,
-                    ["portName"] = ServiceName,
-                    ["authorizedGroup"] = "Everyone"
+                    ["portName"] = ServiceName
                 };
 
-                ipcServerChannel = new IpcServerChannel(props, null, null);
+                ipcServerChannel = new IpcServerChannel(props, null, securityDescriptor);
                 ChannelServices.RegisterChannel(ipcServerChannel, true);
                 RemoteCommandService remoteCommandService = new RemoteCommandService();
 
@@ -180,7 +182,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         protected override void OnStop()
         {
-            // set default exit code.
+            // Set default exit code.
             // If another ExitCode is set in a derived class,
             // it is necessary to consider whether to call this method.
             ExitCode = 0;

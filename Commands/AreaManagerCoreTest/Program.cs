@@ -19,17 +19,32 @@ namespace AreaManagerCoreTest
             try
             {
 #if USE_IPC
-                IpcClientChannel clientChannel = new IpcClientChannel();
-                ChannelServices.RegisterChannel(clientChannel, true);
+                InitializeIpcClientChannel();
 #endif
 
-                RemoteCommandService client = (RemoteCommandService)Activator.GetObject(typeof(RemoteCommandService), $"ipc://DpmEmptyService/RemoteCommandService");
+                RemoteCommandService client = GetIpcRemoteClient<RemoteCommandService>("DpmEmptyService");
+
                 client.RemoteCommand(1, "ABCD");
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Exception:\r\n{ex}");
             }
+        }
+
+        static void InitializeIpcClientChannel()
+        {
+            IpcClientChannel clientChannel = new IpcClientChannel();
+            ChannelServices.RegisterChannel(clientChannel, true);
+        }
+
+        static T GetIpcRemoteClient<T>(string channelName, string objectName=null)
+        {
+            if (objectName == null)
+            {
+                objectName = typeof(T).Name;
+            }
+            return (T)Activator.GetObject(typeof(T), $"ipc://{channelName}/{objectName}");
         }
     }
 }

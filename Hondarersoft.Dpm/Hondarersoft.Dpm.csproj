@@ -60,6 +60,8 @@
     <Compile Include="Environment\ProcessArgs.cs" />
     <Compile Include="Extensions\ServiceControllerExtensions.cs" />
     <Compile Include="PInvoke\Service.cs" />
+    <Compile Include="Remoting\Apis\GetIpcRemoteClient.cs" />
+    <Compile Include="Remoting\Apis\InitializeIpcClientChannel.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

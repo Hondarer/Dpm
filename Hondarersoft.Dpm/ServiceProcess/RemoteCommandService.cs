@@ -30,6 +30,11 @@ namespace Hondarersoft.Dpm.ServiceProcess
             return null;
         }
 
+        public void Hello()
+        {
+            // NOP
+        }
+
         public override object InitializeLifetimeService()
         {
             // オブジェクトのリース期限を無期限にする

@@ -202,6 +202,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
             foreach (string userName in parameter.ExecutableUsers)
             {
+                // TODO: 設定時の例外補足が甘い気がする(指定されたユーザーがいないとか)
                 serviceSecurity.AddAccessRule(new ServiceAccessRule(userName, ServiceAccessRights.GENERIC_READ | ServiceAccessRights.GENERIC_EXECUTE, AccessControlType.Allow));
             }
         }

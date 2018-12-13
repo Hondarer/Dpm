@@ -119,6 +119,10 @@ namespace Hondarersoft.Dpm.ServiceProcess
             InstanceID = Args.GetValue("InstanceID");
             ServiceBaseName = GetType().Name;
 
+            //CanStop = false; // The default is true.
+            //AutoLog = false; // The default is true.
+            //SupportInstanceID = true; // The default is false.
+
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
@@ -177,6 +181,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
             base.OnStart(args);
         }
 
+        // TODO: Pause/Continue の際に、リモーティングサービスを停止させる
+
         protected override void OnStop()
         {
             // Set default exit code.
@@ -217,7 +223,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 serviceInstallParameter = new ServiceInstallParameter();
             }
 
-            if (Args.HasKey("Install"))
+            if (Args.HasKey("Install") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {
@@ -253,7 +259,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 return true;
             }
-            else if (Args.HasKey("Uninstall"))
+            else if (Args.HasKey("Uninstall") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {

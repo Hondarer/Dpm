@@ -1,15 +1,7 @@
-﻿#define USE_IPC
-
-using Hondarersoft.Dpm.Areas;
+﻿using Hondarersoft.Dpm.Apis;
 using Hondarersoft.Dpm.ServiceProcess;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Ipc;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AreaManagerCoreTest
 {
@@ -17,35 +9,25 @@ namespace AreaManagerCoreTest
     {
         static void Main(string[] args)
         {
-#if USE_IPC
-                InitializeIpcClientChannel();
-#endif
+            //Remoting.InitializeIpcClientChannel();
+            //RemoteCommandService client = Remoting.GetIpcRemoteClient<RemoteCommandService>("DpmEmptyService");
 
-                RemoteCommandService client = GetIpcRemoteClient<RemoteCommandService>("DpmEmptyService");
+            //Console.WriteLine("*** Test ***\r\n");
+            //Console.Write("Input message: ");
 
-            try
-            {
-                client.RemoteCommand(1, "ABCD");
-            }
-            catch (RemotingException ex)
-            {
-                Console.Error.WriteLine($"RemotingException:\r\n{ex}");
-            }
-        }
+            //string input = Console.ReadLine();
+            //Console.WriteLine();
 
-        static void InitializeIpcClientChannel()
-        {
-            IpcClientChannel clientChannel = new IpcClientChannel();
-            ChannelServices.RegisterChannel(clientChannel, true);
-        }
+            //try
+            //{
+            //    client.RemoteCommand(1, input);
 
-        static T GetIpcRemoteClient<T>(string channelName, string objectName=null)
-        {
-            if (objectName == null)
-            {
-                objectName = typeof(T).Name;
-            }
-            return (T)Activator.GetObject(typeof(T), $"ipc://{channelName}/{objectName}");
+            //    Console.WriteLine("> Success.");
+            //}
+            //catch (RemotingException ex)
+            //{
+            //    Console.Error.WriteLine(ex);
+            //}
         }
     }
 }

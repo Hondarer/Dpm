@@ -160,16 +160,12 @@ namespace Hondarersoft.Dpm.Areas
 
         protected virtual void OnBlockWrite(ref DateTime lastUpdated, long block)
         {
-            AreaManageData.HeaderAccessor.Read(AreaManageData.GetBlockHeaderOffset(block), out AreaRecordHeader areaBlockHeader);
-            areaBlockHeader.LastUpdated = lastUpdated;
-            AreaManageData.HeaderAccessor.Write(AreaManageData.GetBlockHeaderOffset(block), ref areaBlockHeader);
+            AreaManageData.HeaderAccessor.Write(AreaManageData.GetBlockHeaderOffset(block) + (long)Marshal.OffsetOf<AreaBlockHeader>(nameof(AreaBlockHeader.LastUpdated)), ref lastUpdated);
         }
 
         protected virtual void OnRecordWrite(ref DateTime lastUpdated,long block,long record)
         {
-            AreaManageData.HeaderAccessor.Read(AreaManageData.GetRecordHeaderOffset(block, record), out AreaRecordHeader areaRecordHeader);
-            areaRecordHeader.LastUpdated = lastUpdated;
-            AreaManageData.HeaderAccessor.Write(AreaManageData.GetRecordHeaderOffset(block, record), ref areaRecordHeader);
+            AreaManageData.HeaderAccessor.Write(AreaManageData.GetRecordHeaderOffset(block, record) + (long)Marshal.OffsetOf<AreaRecordHeader>(nameof(AreaRecordHeader.LastUpdated)), ref lastUpdated);
         }
 
         protected virtual void OnAfterWrite(ref DateTime lastUpdated, ref AreaVariableHeader areaVariableHeader)
@@ -206,6 +202,26 @@ namespace Hondarersoft.Dpm.Areas
 
             try
             {
+                MemoryMappedViewAccessor.Write(0, ref structure);
+                OnRecordWrite(ref lastUpdated, 1, 1);
+                OnBlockWrite(ref lastUpdated, 1);
+            }
+            finally
+            {
+                OnAfterWrite(ref lastUpdated, ref areaVariableHeader);
+            }
+        }
+
+        public virtual void Enqueue<T>(long block, ref T structure) where T : struct
+        {
+            OnPreviewWrite(out DateTime lastUpdated, out AreaVariableHeader areaVariableHeader);
+
+            try
+            {
+                // TODO: 当該ブロックのポインターを読む
+                // TODO: 書き込み可能なレコードを特定する
+                // TODO: 書き込みを行う
+
                 MemoryMappedViewAccessor.Write(0, ref structure);
                 OnRecordWrite(ref lastUpdated, 1, 1);
                 OnBlockWrite(ref lastUpdated, 1);

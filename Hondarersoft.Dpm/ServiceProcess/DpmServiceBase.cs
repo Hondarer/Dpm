@@ -4,7 +4,11 @@
 
 using Hondarersoft.Dpm.Environment;
 using System;
+using System.Collections;
 using System.Reflection;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
@@ -12,7 +16,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
     {
         public ProcessArgs Args { get; private set; }
 
-        private string serviceBaseName=null;
+        private string serviceBaseName = null;
 
         public string ServiceBaseName
         {
@@ -58,7 +62,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        private string instanceID=null;
+        private string instanceID = null;
 
         public string InstanceID
         {
@@ -96,11 +100,13 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        // TODO: Remoting 関連の処理への挿入は未実施
+        // TODO: IPC と TCP の共存は試していない
 
         public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
 
         public int TcpServicePort { get; protected set; } = 0;
+
+        protected IpcServerChannel ipcServerChannel;
 
         public DpmServiceBase()
         {
@@ -114,6 +120,77 @@ namespace Hondarersoft.Dpm.ServiceProcess
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+        }
+
+        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = (()=>{ return new RemoteCommandService(); });
+
+        protected override void OnStart(string[] args)
+        {
+            if(RemoteCommandSupport == RemoteCommandSupports.Ipc)
+            {
+                //// This is the wellknown sid for network sid
+                //string networkSidSddlForm = @"S-1-5-2";
+
+                //// Local administrators sid
+                //SecurityIdentifier localAdminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
+
+                //// Local Power users sid
+                //SecurityIdentifier powerUsersSid = new SecurityIdentifier(WellKnownSidType.BuiltinPowerUsersSid, null);
+
+                //// Network sid
+                //SecurityIdentifier networkSid = new SecurityIdentifier(networkSidSddlForm);
+
+                //DiscretionaryAcl dacl = new DiscretionaryAcl(false, false, 1);
+
+                //// Disallow access from off machine
+                //dacl.AddAccess(AccessControlType.Deny, networkSid, -1, InheritanceFlags.None, PropagationFlags.None);
+
+                //// Allow acces only from local administrators and power users
+                //dacl.AddAccess(AccessControlType.Allow, localAdminSid, -1, InheritanceFlags.None, PropagationFlags.None);
+                //dacl.AddAccess(AccessControlType.Allow, powerUsersSid, -1, InheritanceFlags.None, PropagationFlags.None);
+
+                //CommonSecurityDescriptor securityDescriptor =
+                //    new CommonSecurityDescriptor(false, false,
+                //            ControlFlags.GroupDefaulted |
+                //            ControlFlags.OwnerDefaulted |
+                //            ControlFlags.DiscretionaryAclPresent,
+                //            null, null, null, dacl);
+
+                //// IPC Channelを作成
+                //_ipcChannel = new IpcServerChannel(props, null, securityDescriptor);
+
+                IDictionary props = new Hashtable
+                {
+                    ["name"] = ServiceName,
+                    ["portName"] = ServiceName,
+                    ["authorizedGroup"] = "Everyone"
+                };
+
+                ipcServerChannel = new IpcServerChannel(props, null, null);
+                ChannelServices.RegisterChannel(ipcServerChannel, true);
+                RemoteCommandService remoteCommandService = new RemoteCommandService();
+
+                remoteCommandService.OnRemoteCommand += OnRemoteCommand;
+
+                RemotingServices.Marshal(remoteCommandService, remoteCommandService.GetType().Name);
+            }
+
+            base.OnStart(args);
+        }
+
+        protected override void OnStop()
+        {
+            // set default exit code.
+            // If another ExitCode is set in a derived class,
+            // it is necessary to consider whether to call this method.
+            ExitCode = 0;
+
+            base.OnStop();
+        }
+
+        protected virtual object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
+        {
+            return null;
         }
 
         /// <summary>

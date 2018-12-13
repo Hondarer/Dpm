@@ -8,8 +8,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
 {
     public class RemoteCommandService : MarshalByRefObject
     {
-        public delegate object RemoteCommandEventHandler(object sender, RemoteCommandEventArgs eventArgs);
-        public event RemoteCommandEventHandler OnRemoteCommand;
+        internal delegate object RemoteCommandEventHandler(object sender, RemoteCommandEventArgs eventArgs);
+        internal event RemoteCommandEventHandler OnRemoteCommand;
 
         public virtual object RemoteCommand(int command, object data)
         {

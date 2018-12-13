@@ -1,6 +1,7 @@
 ﻿#define USE_IPC
 
 using Hondarersoft.Dpm.Areas;
+using Hondarersoft.Dpm.ServiceProcess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,9 @@ namespace AreaManagerCoreTest
                 IpcClientChannel clientChannel = new IpcClientChannel();
                 ChannelServices.RegisterChannel(clientChannel, true);
 #endif
-                AreaManagerService.Client.TestCommand("ABCDE");
+
+                RemoteCommandService client = (RemoteCommandService)Activator.GetObject(typeof(RemoteCommandService), $"ipc://DpmEmptyService/RemoteCommandService");
+                client.RemoteCommand(1, "ABCD");
             }
             catch (Exception ex)
             {

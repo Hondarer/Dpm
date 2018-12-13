@@ -31,6 +31,7 @@ namespace Hondarersoft.Dpm
             //CanStop = false; // The default is true.
             //AutoLog = false; // The default is true.
             //SupportInstanceID = true; // The default is false.
+            RemoteCommandSupport = RemoteCommandSupports.Ipc;
         }
 
         protected override void OnStart(string[] args)
@@ -43,6 +44,13 @@ namespace Hondarersoft.Dpm
             ExitCode = 0;
 
             base.OnStop();
+        }
+
+        protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
+        {
+            EventLog.WriteEntry("OnRemoteCommand " + eventArgs.Data.ToString());
+
+            return base.OnRemoteCommand(sender, eventArgs);
         }
     }
 }

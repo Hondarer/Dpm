@@ -2,7 +2,7 @@
 using Hondarersoft.Dpm.ServiceProcess;
 using System.Collections.Generic;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.Services
 {
     public class DpmAreaManager : AreaManagerCore
     {

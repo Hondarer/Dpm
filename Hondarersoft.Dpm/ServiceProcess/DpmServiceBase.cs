@@ -128,7 +128,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
         }
 
-        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = (()=>{ return new RemoteCommandService(); });
+        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = ()=>{ return new RemoteCommandService(); };
 
         protected override void OnStart(string[] args)
         {
@@ -171,7 +171,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 ipcServerChannel = new IpcServerChannel(props, null, securityDescriptor);
                 ChannelServices.RegisterChannel(ipcServerChannel, true);
-                RemoteCommandService remoteCommandService = new RemoteCommandService();
+                RemoteCommandService remoteCommandService = CreateRemoteCommandService();
 
                 remoteCommandService.OnRemoteCommand += OnRemoteCommand;
 

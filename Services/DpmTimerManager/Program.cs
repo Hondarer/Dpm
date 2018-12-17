@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hondarersoft.Dpm.ServiceManager
+namespace Hondarersoft.Dpm.Services
 {
     class Program
     {

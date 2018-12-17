@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Hondarersoft.Dpm.ServiceManager</RootNamespace>
+    <RootNamespace>Hondarersoft.Dpm.Services</RootNamespace>
     <AssemblyName>DpmServiceManager</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

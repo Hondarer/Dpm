@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6E97E17E-0DC2-4476-867E-861CC82F2536}</ProjectGuid>
+    <ProjectGuid>{32EEBAE5-C1AA-4459-A451-33F5BF516F61}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Hondarersoft.Dpm.Samples</RootNamespace>
-    <AssemblyName>IpcRecoteCommandClientCommand</AssemblyName>
+    <RootNamespace>Hondarersoft.Dpm.Services</RootNamespace>
+    <AssemblyName>DpmTimerManager</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,21 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IpcRecoteCommandClientCommand.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Hondarersoft.Dpm\Hondarersoft.Dpm.csproj">
-      <Project>{3BC6B9F7-F637-4114-8BFD-971C9B496039}</Project>
-      <Name>Hondarersoft.Dpm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hondarersoft.Dpm.IpcRemoteCommandServiceSample\Hondarersoft.Dpm.Samples.IpcRemoteCommandService.csproj">
-      <Project>{1b126782-ef47-4c18-bed2-137b256dc0d8}</Project>
-      <Name>Hondarersoft.Dpm.Samples.IpcRemoteCommandService</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

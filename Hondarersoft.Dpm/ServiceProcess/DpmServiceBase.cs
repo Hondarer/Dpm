@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
@@ -102,12 +103,11 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        // TODO: IPC と TCP の共存は試していない
-
         public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
 
         public int TcpServicePort { get; protected set; } = 0;
 
+        protected TcpChannel tcpServerChannel;
         protected IpcServerChannel ipcServerChannel;
 
         public DpmServiceBase()
@@ -132,7 +132,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         protected override void OnStart(string[] args)
         {
-            if (RemoteCommandSupport == RemoteCommandSupports.Ipc)
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
             {
                 //// Local administrators sid
                 //SecurityIdentifier localAdminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
@@ -171,11 +171,24 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 ipcServerChannel = new IpcServerChannel(props, null, securityDescriptor);
                 ChannelServices.RegisterChannel(ipcServerChannel, true);
+            }
+
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel = new TcpChannel(TcpServicePort); // ポート番号に 0 を渡すと、動的割り当てができる。
+                ChannelServices.RegisterChannel(tcpServerChannel, false);
+            }
+
+            if (RemoteCommandSupport != RemoteCommandSupports.None)
+            {
                 RemoteCommandService remoteCommandService = CreateRemoteCommandService();
-
                 remoteCommandService.OnRemoteCommand += OnRemoteCommand;
-
                 RemotingServices.Marshal(remoteCommandService, remoteCommandService.GetType().Name);
+            }
+
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StartListening(null); // IPC の場合は、初回生成時は既に待ち受けを開始している
             }
 
             base.OnStart(args);
@@ -185,6 +198,11 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         protected override void OnStop()
         {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StopListening(null);
+            }
+
             // Set default exit code.
             // If another ExitCode is set in a derived class,
             // it is necessary to consider whether to call this method.

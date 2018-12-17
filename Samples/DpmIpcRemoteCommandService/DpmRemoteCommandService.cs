@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Hondarersoft.Dpm.Samples
 {
-    public class DpmIpcRemoteCommandService : DpmServiceBase
+    public class DpmRemoteCommandService : DpmServiceBase
     {
         public enum RemoteCommands : int
         {
@@ -14,7 +14,7 @@ namespace Hondarersoft.Dpm.Samples
 
         public static int Main(string[] args)
         {
-            DpmIpcRemoteCommandService instance = new DpmIpcRemoteCommandService();
+            DpmRemoteCommandService instance = new DpmRemoteCommandService();
 
             #region Region for self install
 
@@ -37,9 +37,13 @@ namespace Hondarersoft.Dpm.Samples
             return instance.ExitCode;
         }
 
-        public DpmIpcRemoteCommandService() : base()
+        public DpmRemoteCommandService() : base()
         {
-            RemoteCommandSupport = RemoteCommandSupports.Ipc;
+            // Choice None, Ipc, Tcp, Both (Default: None)
+            RemoteCommandSupport = RemoteCommandSupports.Both;
+
+            // For Tcp
+            TcpServicePort = 19000;
         }
 
         protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
@@ -52,8 +56,8 @@ namespace Hondarersoft.Dpm.Samples
                     EventLog.WriteEntry($"OnRemoteCommand: \"{eventArgs.Data.ToString()}\"");
                     break;
                 default:
+                    // NOP
                     break;
-
             }
 
             return base.OnRemoteCommand(sender, eventArgs);

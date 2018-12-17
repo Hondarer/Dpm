@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaManagerCoreTest", "Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmEmptyService", "Samples\DpmEmptyService\DpmEmptyService.csproj", "{52CFDFC9-929A-4A15-B83C-3857EACC201B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmIpcRecoteCommandClient", "Samples\DpmIpcRecoteCommandClient\DpmIpcRecoteCommandClient.csproj", "{6E97E17E-0DC2-4476-867E-861CC82F2536}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmRemoteCommandClient", "Samples\DpmIpcRecoteCommandClient\DpmRemoteCommandClient.csproj", "{6E97E17E-0DC2-4476-867E-861CC82F2536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmIpcRemoteCommandService", "Samples\DpmIpcRemoteCommandService\DpmIpcRemoteCommandService.csproj", "{1B126782-EF47-4C18-BED2-137B256DC0D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmRemoteCommandService", "Samples\DpmIpcRemoteCommandService\DpmRemoteCommandService.csproj", "{1B126782-EF47-4C18-BED2-137B256DC0D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmAreaManager", "Services\DpmAreaManager\DpmAreaManager.csproj", "{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}"
 EndProject

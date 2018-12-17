@@ -55,7 +55,7 @@
       <Project>{3BC6B9F7-F637-4114-8BFD-971C9B496039}</Project>
       <Name>Hondarersoft.Dpm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DpmIpcRemoteCommandService\DpmRemoteCommandService.csproj">
+    <ProjectReference Include="..\DpmRemoteCommandService\DpmRemoteCommandService.csproj">
       <Project>{1b126782-ef47-4c18-bed2-137b256dc0d8}</Project>
       <Name>DpmRemoteCommandService</Name>
     </ProjectReference>

@@ -9,8 +9,12 @@ namespace Hondarersoft.Dpm.Samples
     {
         private static void Main(string[] args)
         {
+            // Initialize ipc channel
             Remoting.InitializeIpcClientChannel();
-            RemoteCommandService client = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(DpmRemoteCommandService));
+            RemoteCommandService ipcClient = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(DpmRemoteCommandService));
+
+            // Initialize tcp channel
+            RemoteCommandService tcpClient = (RemoteCommandService)Activator.GetObject(typeof(RemoteCommandService), $"tcp://localhost:19000/{nameof(RemoteCommandService)}");
 
             Console.WriteLine("*** DpmRemoteCommandClient ***\r\n");
             Console.Write("Input message: ");
@@ -20,29 +24,25 @@ namespace Hondarersoft.Dpm.Samples
 
             try
             {
-                client.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
+                ipcClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
 
-                Console.WriteLine("> Done.");
+                Console.WriteLine("> Ipc done.");
             }
             catch (RemotingException ex)
             {
                 Console.Error.WriteLine(ex);
             }
-
-
 
             try
             {
-                RemoteCommandService tcpclient = (RemoteCommandService)Activator.GetObject(typeof(RemoteCommandService), $"tcp://localhost:19000/{nameof(RemoteCommandService)}");
-                tcpclient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
+                tcpClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
 
-                Console.WriteLine("> Done.");
+                Console.WriteLine("> Tcp done.");
             }
             catch (RemotingException ex)
             {
                 Console.Error.WriteLine(ex);
             }
-
         }
     }
 }

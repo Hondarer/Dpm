@@ -5,14 +5,14 @@ using System.Runtime.Remoting;
 
 namespace Hondarersoft.Dpm.Samples
 {
-    class IpcRecoteCommandClientCommand
+    class DpmIpcRecoteCommandClient
     {
         private static void Main(string[] args)
         {
             Remoting.InitializeIpcClientChannel();
-            RemoteCommandService client = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(IpcRemoteCommandService));
+            RemoteCommandService client = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(DpmIpcRemoteCommandService));
 
-            Console.WriteLine("*** IpcRecoteCommandClientCommand ***\r\n");
+            Console.WriteLine("*** DpmIpcRecoteCommandClient ***\r\n");
             Console.Write("Input message: ");
 
             string input = Console.ReadLine();
@@ -20,9 +20,9 @@ namespace Hondarersoft.Dpm.Samples
 
             try
             {
-                client.RemoteCommand((int)IpcRemoteCommandService.RemoteCommands.SendStringMessage, input);
+                client.RemoteCommand((int)DpmIpcRemoteCommandService.RemoteCommands.SendStringMessage, input);
 
-                Console.WriteLine("> Success.");
+                Console.WriteLine("> Done.");
             }
             catch (RemotingException ex)
             {

@@ -5,25 +5,25 @@ VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.Samples.EmptyService", "Samples\Hondarersoft.Dpm.EmptyService\Hondarersoft.Dpm.Samples.EmptyService.csproj", "{52CFDFC9-929A-4A15-B83C-3857EACC201B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm", "Hondarersoft.Dpm\Hondarersoft.Dpm.csproj", "{3BC6B9F7-F637-4114-8BFD-971C9B496039}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{783D9DFF-7355-4FE2-AD6C-4D14D574DABC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{F72981A5-3AF9-411B-BC73-198FDDDCA4B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.AreaManager", "Services\Hondarersoft.Dpm.AreaManager\Hondarersoft.Dpm.AreaManager.csproj", "{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.ServiceManager", "Services\Hondarer-soft.Dpm.ServiceManager\Hondarersoft.Dpm.ServiceManager.csproj", "{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.TimerManager", "Services\Hondarersoft.Dpm.TimerManager\Hondarersoft.Dpm.TimerManager.csproj", "{32EEBAE5-C1AA-4459-A451-33F5BF516F61}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AreaManagerCoreTest", "Commands\AreaManagerCoreTest\AreaManagerCoreTest.csproj", "{B5080C5A-573D-4772-8291-8DEEA3F72B2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.Samples.IpcRemoteCommandService", "Samples\Hondarersoft.Dpm.IpcRemoteCommandServiceSample\Hondarersoft.Dpm.Samples.IpcRemoteCommandService.csproj", "{1B126782-EF47-4C18-BED2-137B256DC0D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmEmptyService", "Samples\DpmEmptyService\DpmEmptyService.csproj", "{52CFDFC9-929A-4A15-B83C-3857EACC201B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.Dpm.Samples.IpcRecoteCommandClientCommand", "Samples\Hondarersoft.Dpm.Samples.IpcRecoteCommandClientCommand\Hondarersoft.Dpm.Samples.IpcRecoteCommandClientCommand.csproj", "{6E97E17E-0DC2-4476-867E-861CC82F2536}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmIpcRecoteCommandClient", "Samples\DpmIpcRecoteCommandClient\DpmIpcRecoteCommandClient.csproj", "{6E97E17E-0DC2-4476-867E-861CC82F2536}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmIpcRemoteCommandService", "Samples\DpmIpcRemoteCommandService\DpmIpcRemoteCommandService.csproj", "{1B126782-EF47-4C18-BED2-137B256DC0D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmAreaManager", "Services\DpmAreaManager\DpmAreaManager.csproj", "{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmServiceManager", "Services\DpmServiceManager\DpmServiceManager.csproj", "{3945F7A3-C076-4FBF-8FA4-F3B013D623CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmTimerManager", "Services\DpmTimerManager\DpmTimerManager.csproj", "{32EEBAE5-C1AA-4459-A451-33F5BF516F61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BC6B9F7-F637-4114-8BFD-971C9B496039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52CFDFC9-929A-4A15-B83C-3857EACC201B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,30 +63,18 @@ Global
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5080C5A-573D-4772-8291-8DEEA3F72B2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E97E17E-0DC2-4476-867E-861CC82F2536}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{B5080C5A-573D-4772-8291-8DEEA3F72B2A} = {783D9DFF-7355-4FE2-AD6C-4D14D574DABC}
 		{52CFDFC9-929A-4A15-B83C-3857EACC201B} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
+		{6E97E17E-0DC2-4476-867E-861CC82F2536} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
+		{1B126782-EF47-4C18-BED2-137B256DC0D8} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
 		{04AD7741-16B3-4EA1-81A4-2A6DDF36BC52} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
 		{3945F7A3-C076-4FBF-8FA4-F3B013D623CE} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
 		{32EEBAE5-C1AA-4459-A451-33F5BF516F61} = {F72981A5-3AF9-411B-BC73-198FDDDCA4B2}
-		{B5080C5A-573D-4772-8291-8DEEA3F72B2A} = {783D9DFF-7355-4FE2-AD6C-4D14D574DABC}
-		{1B126782-EF47-4C18-BED2-137B256DC0D8} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
-		{6E97E17E-0DC2-4476-867E-861CC82F2536} = {D291DDC4-38C8-42EB-90DA-4692FAF1DBBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CC36C60-D2B4-408D-9265-089E38C9A64B}

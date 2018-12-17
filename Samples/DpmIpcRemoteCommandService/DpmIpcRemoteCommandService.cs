@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 namespace Hondarersoft.Dpm.Samples
 {
-    public class IpcRemoteCommandService : DpmServiceBase
+    public class DpmIpcRemoteCommandService : DpmServiceBase
     {
         public enum RemoteCommands : int
         {
             Unkhown = 0,
-            SendStringMessage
+            SendStringMessage = 1
         }
 
         public static int Main(string[] args)
         {
-            IpcRemoteCommandService instance = new IpcRemoteCommandService();
+            DpmIpcRemoteCommandService instance = new DpmIpcRemoteCommandService();
 
             #region Region for self install
 
@@ -37,7 +37,7 @@ namespace Hondarersoft.Dpm.Samples
             return instance.ExitCode;
         }
 
-        public IpcRemoteCommandService() : base()
+        public DpmIpcRemoteCommandService() : base()
         {
             RemoteCommandSupport = RemoteCommandSupports.Ipc;
         }
@@ -49,7 +49,7 @@ namespace Hondarersoft.Dpm.Samples
             switch (command)
             {
                 case RemoteCommands.SendStringMessage:
-                    EventLog.WriteEntry("OnRemoteCommand: \"" + eventArgs.Data.ToString() + "\"");
+                    EventLog.WriteEntry($"OnRemoteCommand: \"{eventArgs.Data.ToString()}\"");
                     break;
                 default:
                     break;

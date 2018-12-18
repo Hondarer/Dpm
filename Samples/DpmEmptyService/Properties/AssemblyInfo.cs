@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Hondarersoft.Dpm.EmptyService")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Empty service")]
+[assembly: AssemblyDescription("Sample of empty service.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.EmptyService")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.Samples.EmptyService")]
+[assembly: AssemblyCopyright("Copyright © 2018 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

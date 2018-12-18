@@ -6,6 +6,8 @@ namespace Hondarersoft.Dpm.Samples
 {
     public class DpmRemoteCommandService : DpmServiceBase
     {
+        public const int SERVICE_PORT = 19000;
+
         public enum RemoteCommands : int
         {
             Unkhown = 0,
@@ -20,8 +22,7 @@ namespace Hondarersoft.Dpm.Samples
 
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                DisplayName = "IpcRemoteCommand service",
-                Description = "Sample service for using IpcRemoteCommand",
+                // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
                 ExecutableUsers = new List<string>() { "Everyone" }
             };
 
@@ -43,7 +44,7 @@ namespace Hondarersoft.Dpm.Samples
             RemoteCommandSupport = RemoteCommandSupports.Both;
 
             // For Tcp
-            TcpServicePort = 19000;
+            TcpServicePort = SERVICE_PORT;
         }
 
         protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)

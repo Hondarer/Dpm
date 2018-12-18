@@ -1,7 +1,7 @@
 ﻿using Hondarersoft.Dpm.ServiceProcess;
 using System.Collections.Generic;
 
-namespace Hondarersoft.Dpm
+namespace Hondarersoft.Dpm.Samples
 {
     public class DpmEmptyService : DpmServiceBase
     {
@@ -13,8 +13,7 @@ namespace Hondarersoft.Dpm
 
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                DisplayName = "Empty service",
-                Description = "Sample of empty service",
+                // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
                 ExecutableUsers = new List<string>() { "Everyone" }
             };
 

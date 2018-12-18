@@ -14,7 +14,7 @@ namespace Hondarersoft.Dpm.Samples
             RemoteCommandService ipcClient = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(DpmRemoteCommandService));
 
             // Initialize tcp channel
-            RemoteCommandService tcpClient = (RemoteCommandService)Activator.GetObject(typeof(RemoteCommandService), $"tcp://localhost:19000/{nameof(RemoteCommandService)}");
+            RemoteCommandService tcpClient = Remoting.GetTcpRemoteClient<RemoteCommandService>(null, DpmRemoteCommandService.SERVICE_PORT);
 
             Console.WriteLine("*** DpmRemoteCommandClient ***\r\n");
             Console.Write("Input message: ");
@@ -24,7 +24,7 @@ namespace Hondarersoft.Dpm.Samples
 
             try
             {
-                ipcClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
+                ipcClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, $"{input} from ipc");
 
                 Console.WriteLine("> Ipc done.");
             }
@@ -35,7 +35,7 @@ namespace Hondarersoft.Dpm.Samples
 
             try
             {
-                tcpClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, input);
+                tcpClient.RemoteCommand((int)DpmRemoteCommandService.RemoteCommands.SendStringMessage, $"{input} from tcp");
 
                 Console.WriteLine("> Tcp done.");
             }

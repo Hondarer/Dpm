@@ -50,6 +50,7 @@
     <Compile Include="Areas\AreaManagerCore.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\AssemblyInfo.cs" />
     <Compile Include="PInvoke\Path.cs" />
     <Compile Include="Principal\Apis\IsAdministrator.cs" />
     <Compile Include="Areas\Apis\MemoryMappedFileExists.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Extensions\ServiceControllerExtensions.cs" />
     <Compile Include="PInvoke\Service.cs" />
     <Compile Include="Remoting\Apis\GetIpcRemoteClient.cs" />
+    <Compile Include="Remoting\Apis\GetTcpRemoteClient.cs" />
     <Compile Include="Remoting\Apis\InitializeIpcClientChannel.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -89,7 +91,9 @@
     <Compile Include="Sync\Apis\CreateGlobalMutex.cs" />
     <Compile Include="Sync\Apis\CreateMasterMutex.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.ja.resx" />
     <EmbeddedResource Include="Resources\Resource.resx">

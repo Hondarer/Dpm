@@ -6,8 +6,6 @@ namespace Hondarersoft.Dpm.Samples
 {
     public class DpmRemoteCommandService : DpmServiceBase
     {
-        public const int SERVICE_PORT = 19000;
-
         public enum RemoteCommands : int
         {
             Unkhown = 0,
@@ -42,9 +40,6 @@ namespace Hondarersoft.Dpm.Samples
         {
             // Choice None, Ipc, Tcp, Both (Default: None)
             RemoteCommandSupport = RemoteCommandSupports.Both;
-
-            // For Tcp
-            TcpServicePort = SERVICE_PORT;
         }
 
         protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)

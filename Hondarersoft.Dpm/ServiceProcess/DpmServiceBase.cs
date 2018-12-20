@@ -105,10 +105,14 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
         public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
 
-        public int TcpServicePort { get; protected set; } = 0;
+        public const int UNSET_PORT_NUMBER = -1;
+
+        public int TcpServicePort { get; protected set; } = UNSET_PORT_NUMBER;
 
         protected TcpChannel tcpServerChannel;
         protected IpcServerChannel ipcServerChannel;
+
+        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = ()=>{ return new RemoteCommandService(); };
 
         public DpmServiceBase()
         {
@@ -127,8 +131,6 @@ namespace Hondarersoft.Dpm.ServiceProcess
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
         }
-
-        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = ()=>{ return new RemoteCommandService(); };
 
         protected override void OnStart(string[] args)
         {
@@ -173,16 +175,26 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 ChannelServices.RegisterChannel(ipcServerChannel, true);
             }
 
+            RemoteCommandService remoteCommandService = null;
+            if (RemoteCommandSupport != RemoteCommandSupports.None)
+            {
+                remoteCommandService = CreateRemoteCommandService();
+                remoteCommandService.OnRemoteCommand += OnRemoteCommand;
+            }
+
             if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
             {
-                tcpServerChannel = new TcpChannel(TcpServicePort); // ポート番号に 0 を渡すと、動的割り当てができる。
+                if (TcpServicePort == UNSET_PORT_NUMBER)
+                {
+                    TcpServicePort = Apis.Remoting.GetRemoteTcpPort(remoteCommandService);
+                }
+
+                tcpServerChannel = new TcpChannel(TcpServicePort);
                 ChannelServices.RegisterChannel(tcpServerChannel, false);
             }
 
             if (RemoteCommandSupport != RemoteCommandSupports.None)
             {
-                RemoteCommandService remoteCommandService = CreateRemoteCommandService();
-                remoteCommandService.OnRemoteCommand += OnRemoteCommand;
                 RemotingServices.Marshal(remoteCommandService, remoteCommandService.GetType().Name);
             }
 
@@ -194,7 +206,34 @@ namespace Hondarersoft.Dpm.ServiceProcess
             base.OnStart(args);
         }
 
-        // TODO: Pause/Continue の際に、リモーティングサービスを停止させる
+#if false // 一時停止中もリモートオブジェクト自体は生かしておくほうがいいように思った。
+        protected override void OnPause()
+        {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                ipcServerChannel.StopListening(null);
+            }
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StopListening(null);
+            }
+
+            base.OnPause();
+        }
+
+        protected override void OnContinue()
+        {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                ipcServerChannel.StartListening(null);
+            }
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StartListening(null);
+            }
+            base.OnContinue();
+        }
+#endif
 
         protected override void OnStop()
         {

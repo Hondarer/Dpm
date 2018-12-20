@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 
 // TODO: 必要最低限しか作業していない
@@ -7,7 +8,9 @@ namespace Hondarersoft.Dpm.Environment
 {
     public class AssemblyInfo
     {
+        public string Name { get; protected set; }
         public string Title { get; protected set; }
+        public Version Version { get; protected set; }
 
         public string Description { get; protected set; }
 
@@ -18,8 +21,8 @@ namespace Hondarersoft.Dpm.Environment
             Assembly asm = Assembly.GetEntryAssembly();
 
             AssemblyName asmName = asm.GetName();
-            string name = "AssemblyName.Name : " + asmName.Name;
-            string version = "AssemblyName.Version : " + asmName.Version.ToString();
+            Name = asmName.Name;
+            Version = asmName.Version;
             string fullname = "AssemblyName.FullName : " + asmName.FullName;
             string processor = "AssemblyName.ProcessorArchitecture : " + asmName.ProcessorArchitecture;
             string runtime = "Assembly.ImageRuntimeVersion : " + asm.ImageRuntimeVersion;

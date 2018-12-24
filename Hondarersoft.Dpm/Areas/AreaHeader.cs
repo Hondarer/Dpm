@@ -10,6 +10,9 @@ namespace Hondarersoft.Dpm.Areas
     [StructLayout(LayoutKind.Sequential)]
     public struct AreaFixedHeader
     {
+        // 将来的に、この値が変更されたら、データを動的に差し替えたい。
+        public long Version { get; set; }
+
         public long RecordLength { get; set; }
 
         public long Blocks { get; set; }

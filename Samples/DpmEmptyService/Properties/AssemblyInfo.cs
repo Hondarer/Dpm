@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Sample of empty service.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.Samples.EmptyService")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.Samples.DpmEmptyService")]
 [assembly: AssemblyCopyright("Copyright © 2018 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

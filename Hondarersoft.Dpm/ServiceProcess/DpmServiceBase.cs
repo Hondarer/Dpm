@@ -186,7 +186,7 @@ namespace Hondarersoft.Dpm.ServiceProcess
             {
                 if (TcpServicePort == UNSET_PORT_NUMBER)
                 {
-                    TcpServicePort = Apis.Remoting.GetRemoteTcpPort(remoteCommandService);
+                    TcpServicePort = Apis.Remoting.GetRemoteTcpPort(this, remoteCommandService);
                 }
 
                 tcpServerChannel = new TcpChannel(TcpServicePort);

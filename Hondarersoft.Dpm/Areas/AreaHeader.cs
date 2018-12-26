@@ -7,11 +7,17 @@ using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Areas
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct AreaFixedHeader
     {
         // 将来的に、この値が変更されたら、データを動的に差し替えたい。
         public long Version { get; set; }
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string AssemblyName;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Name;
 
         public long RecordLength { get; set; }
 

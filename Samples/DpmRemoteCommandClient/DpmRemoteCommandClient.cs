@@ -11,10 +11,10 @@ namespace Hondarersoft.Dpm.Samples
         {
             // Initialize ipc channel
             Remoting.InitializeIpcClientChannel();
-            RemoteCommandService ipcClient = Remoting.GetIpcRemoteClient<RemoteCommandService>(nameof(DpmRemoteCommandService));
+            RemoteCommandService ipcClient = Remoting.GetIpcRemoteClient<RemoteCommandService>(typeof(DpmRemoteCommandService));
 
             // Initialize tcp channel
-            RemoteCommandService tcpClient = Remoting.GetTcpRemoteClient<RemoteCommandService>();
+            RemoteCommandService tcpClient = Remoting.GetTcpRemoteClient<RemoteCommandService>(typeof(DpmRemoteCommandService));
 
             Console.WriteLine("*** DpmRemoteCommandClient ***\r\n");
             Console.Write("Input message: ");

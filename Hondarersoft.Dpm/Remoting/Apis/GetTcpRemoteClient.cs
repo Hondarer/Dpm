@@ -1,31 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Apis
 {
     public static partial class Remoting
     {
-        public static T GetTcpRemoteClient<T>(string hostName = null, int port = -1, string uri = null)
+        public static T GetTcpRemoteClient<T>(Type remoteServiceType, string hostName = null, string instanceID = null)
         {
             if (string.IsNullOrWhiteSpace(hostName) == true)
             {
                 hostName = "localhost";
             }
 
-            if (uri == null)
-            {
-                uri = typeof(T).Name;
-            }
+            int port = GetRemoteTcpPort(remoteServiceType, typeof(T), instanceID);
 
-            if (port == -1)
-            {
-                port = GetRemoteTcpPort(typeof(T));
-            }
-
-            return (T)Activator.GetObject(typeof(T), $"tcp://{hostName}:{port}/{uri}");
+            return (T)Activator.GetObject(typeof(T), $"tcp://{hostName}:{port}/{typeof(T).Name}");
         }
     }
 }

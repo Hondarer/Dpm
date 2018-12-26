@@ -52,6 +52,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Environment\AssemblyInfo.cs" />
+    <Compile Include="Network\Apis\OpenConnection.cs" />
+    <Compile Include="PInvoke\Network.cs" />
     <Compile Include="PInvoke\Path.cs" />
     <Compile Include="Principal\Apis\IsAdministrator.cs" />
     <Compile Include="Areas\Apis\MemoryMappedFileExists.cs" />

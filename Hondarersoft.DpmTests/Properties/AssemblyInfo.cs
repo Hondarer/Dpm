@@ -1,13 +1,12 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Hondarersoft.DpmTest")]
+[assembly: AssemblyTitle("Hondarersoft.DpmTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.DpmTest")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyProduct("Hondarersoft.DpmTests")]
+[assembly: AssemblyCopyright("Copyright © 2019 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -129,8 +129,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
             //SupportInstanceID = true; // The default is false.
 
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
-            CanShutdown = IsMethodInherited(nameof(OnShutdown));
-            CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+            CanShutdown = Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnShutdown));
+            CanPauseAndContinue = (Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnPause)) || Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnContinue)));
         }
 
         /// <summary>
@@ -286,24 +286,6 @@ namespace Hondarersoft.Dpm.ServiceProcess
         protected virtual object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
         {
             return null;
-        }
-
-        /// <summary>
-        /// メソッドが派生クラスに実装されているかどうかを判定します。
-        /// </summary>
-        /// <param name="methodName">確認対象のメソッド名。</param>
-        /// <returns>メソッドが派生クラスに実装されている場合は <c>true</c>、それ以外は <c>false</c>。</returns>
-        protected bool IsMethodInherited(string methodName)
-        {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-
-            // 当該メソッドが自分でないクラスに実装され、かつ、virturl である場合は true
-            if ((method.DeclaringType != typeof(DpmServiceBase).BaseType) && (method.IsVirtual == true))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public bool TryInstall(ServiceInstallParameter serviceInstallParameter = null)

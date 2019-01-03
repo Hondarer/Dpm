@@ -96,109 +96,109 @@ namespace Hondarersoft.Dpm.PInvoke
         #region 構造体
 
         /// <summary>
-        /// MmTime
+        /// The structure contains timing information for different types of multimedia data.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
         public struct MmTime
         {
             /// <summary>
-            /// indicates the contents of the union
+            /// indicates the contents of the union.
             /// </summary>
             [FieldOffset(0)]
             public uint wType;
 
             /// <summary>
-            /// milliseconds
+            /// milliseconds.
             /// </summary>
             [FieldOffset(4)]
             public uint ms;
 
             /// <summary>
-            /// samples
+            /// samples.
             /// </summary>
             [FieldOffset(4)]
             public uint sample;
 
             /// <summary>
-            /// byte count
+            /// byte count.
             /// </summary>
             [FieldOffset(4)]
             public uint cb;
 
             /// <summary>
-            /// ticks in MIDI stream
+            /// ticks in MIDI stream.
             /// </summary>
             [FieldOffset(4)]
             public uint ticks;
 
             /// <summary>
-            /// SMPTE - hours
+            /// SMPTE - hours.
             /// </summary>
             [FieldOffset(4)]
             public byte hour;
 
             /// <summary>
-            /// SMPTE - minutes
+            /// SMPTE - minutes.
             /// </summary>
             [FieldOffset(5)]
             public byte min;
 
             /// <summary>
-            /// SMPTE - seconds
+            /// SMPTE - seconds.
             /// </summary>
             [FieldOffset(6)]
             public byte sec;
 
             /// <summary>
-            /// SMPTE - frames
+            /// SMPTE - frames.
             /// </summary>
             [FieldOffset(7)]
             public byte frame;
 
             /// <summary>
-            /// SMPTE - frames per second
+            /// SMPTE - frames per second.
             /// </summary>
             [FieldOffset(8)]
             public byte fps;
 
             /// <summary>
-            /// dummy
+            /// dummy.
             /// </summary>
             [FieldOffset(9)]
             public byte dummy;
 
             /// <summary>
-            /// padding
+            /// padding.
             /// </summary>
             [FieldOffset(10)]
             public byte pad0;
 
             /// <summary>
-            /// padding
+            /// padding.
             /// </summary>
             [FieldOffset(11)]
             public byte pad1;
 
             /// <summary>
-            /// MIDI - song pointer position
+            /// MIDI - song pointer position.
             /// </summary>
             [FieldOffset(4)]
             public uint songptrpos;
         }
 
         /// <summary>
-        /// timer device capabilities data structure
+        /// timer device capabilities data structure.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct TimeCaps
         {
             /// <summary>
-            /// minimum period supported
+            /// minimum period supported.
             /// </summary>
             public int periodMin;
 
             /// <summary>
-            /// maximum period supported
+            /// maximum period supported.
             /// </summary>
             public int periodMax;
         }

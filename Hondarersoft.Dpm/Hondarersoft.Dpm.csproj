@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="ServiceProcess\Apis\GetMyServiceController.cs" />
     <Compile Include="ServiceProcess\Apis\IsServiceExists.cs" />
+    <Compile Include="ServiceProcess\Apis\IsServiceSession.cs" />
     <Compile Include="ServiceProcess\Apis\StartService.cs" />
     <Compile Include="ServiceProcess\Apis\StopService.cs" />
     <Compile Include="ServiceProcess\RemoteCommandEventArgs.cs" />

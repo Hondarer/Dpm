@@ -12,10 +12,11 @@ using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.ServiceProcess;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public class DpmServiceBase : System.ServiceProcess.ServiceBase
+    public class DpmServiceBase : ServiceBase
     {
         public ProcessArgs Args { get; private set; }
 
@@ -130,6 +131,38 @@ namespace Hondarersoft.Dpm.ServiceProcess
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
             CanShutdown = IsMethodInherited(nameof(OnShutdown));
             CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+        }
+
+        /// <summary>
+        /// サービス コントロール マネージャー (SCM) とサービスの実行可能ファイルを登録します。
+        /// </summary>
+        /// <param name="service"><see cref="ServiceBase"/> サービスを開始することを示します。</param>
+        /// <exception cref="ArgumentException"><paramref name="service"/> は <c>null</c> です。</exception>
+        public static new void Run(ServiceBase service)
+        {
+            if (Apis.ServiceProcess.IsServiceSession() == false)
+            {
+                Console.Error.WriteLine(Resources.Resource.NOT_A_SERVICE_SESSION);
+                return;
+            }
+
+            ServiceBase.Run(service);
+        }
+
+        /// <summary>
+        /// サービス コントロール マネージャー (SCM) に複数のサービス実行可能ファイルを登録します。
+        /// </summary>
+        /// <param name="services">サービスの開始を示す ServiceBase インスタンスの配列。</param>
+        /// <exception cref="ArgumentException">サービスを開始するが指定されていません。 配列である可能性があります <c>null</c> または空です。</exception>
+        public static new void Run(ServiceBase[] services)
+        {
+            if (Apis.ServiceProcess.IsServiceSession() == false)
+            {
+                Console.Error.WriteLine(Resources.Resource.NOT_A_SERVICE_SESSION);
+                return;
+            }
+
+            ServiceBase.Run(services);
         }
 
         protected override void OnStart(string[] args)

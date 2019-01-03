@@ -6,6 +6,7 @@ namespace Hondarersoft.Dpm.Apis
     {
         public static void OpenConnection(string path, string username, string password)
         {
+            // TODO: 定数の登録をしてない
             NETRESOURCE netResource = new NETRESOURCE
             {
                 dwScope = 0,
@@ -17,6 +18,7 @@ namespace Hondarersoft.Dpm.Apis
                 lpProvider = ""
             };
 
+            // TODO: 失敗の検出をしてない
             WNetCancelConnection2(path, 0, true);
             WNetAddConnection2(ref netResource, password, username, 0);
         }

@@ -14,7 +14,7 @@ namespace Hondarersoft.Dpm.Samples
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
                 // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
-                ExecutableUsers = new List<string>() { "Everyone" }
+                ExecutableUsers = new List<string>() { "Users" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)

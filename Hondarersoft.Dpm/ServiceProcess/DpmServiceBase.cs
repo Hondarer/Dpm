@@ -313,7 +313,44 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 serviceInstallParameter = new ServiceInstallParameter();
             }
 
-            if (Args.HasKey("Install") == true)
+            if (Args.HasKey("ReInstall") == true)
+            {
+                if (Apis.Principal.IsAdministrator() != true)
+                {
+                    Console.Error.WriteLine("You are not Administrator.");
+                    ExitCode = 1;
+                }
+                else if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
+                {
+                    Console.Error.WriteLine(Resources.Resource.SERVICE_ISNOT_INSTALLED);
+                    ExitCode = 1;
+                }
+                else
+                {
+                    try
+                    {
+                        new IntegratedServiceInstaller().Uninstall(GetType().Name, InstanceID);
+                        new IntegratedServiceInstaller().Install(GetType().Name, InstanceID, serviceInstallParameter);
+
+                        if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
+                        {
+                            ExitCode = 0;
+                        }
+                        else
+                        {
+                            ExitCode = 1;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine(ex);
+                        ExitCode = 1;
+                    }
+                }
+
+                return true;
+            }
+            else if (Args.HasKey("Install") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {

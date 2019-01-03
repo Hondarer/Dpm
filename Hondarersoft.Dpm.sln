@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmRemoteCommandClient", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DpmRemoteCommandService", "Samples\DpmRemoteCommandService\DpmRemoteCommandService.csproj", "{1B126782-EF47-4C18-BED2-137B256DC0D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hondarersoft.DpmTest", "Hondarersoft.DpmTest\Hondarersoft.DpmTest.csproj", "{2E467018-7AAC-4A01-8DC7-94AADAAF1986}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B126782-EF47-4C18-BED2-137B256DC0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E467018-7AAC-4A01-8DC7-94AADAAF1986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E467018-7AAC-4A01-8DC7-94AADAAF1986}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E467018-7AAC-4A01-8DC7-94AADAAF1986}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E467018-7AAC-4A01-8DC7-94AADAAF1986}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

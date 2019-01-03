@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Hondarersoft.Dpm.Samples
 {
-    public class DpmIpcRemoteCommandService : DpmServiceBase
+    public class DpmRemoteCommandService : DpmServiceBase
     {
         public enum RemoteCommands : int
         {
@@ -14,15 +14,14 @@ namespace Hondarersoft.Dpm.Samples
 
         public static int Main(string[] args)
         {
-            DpmIpcRemoteCommandService instance = new DpmIpcRemoteCommandService();
+            DpmRemoteCommandService instance = new DpmRemoteCommandService();
 
             #region Region for self install
 
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                DisplayName = "IpcRemoteCommand service",
-                Description = "Sample service for using IpcRemoteCommand",
-                ExecutableUsers = new List<string>() { "Everyone" }
+                // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
+                ExecutableUsers = new List<string>() { "Users" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)
@@ -37,9 +36,10 @@ namespace Hondarersoft.Dpm.Samples
             return instance.ExitCode;
         }
 
-        public DpmIpcRemoteCommandService() : base()
+        public DpmRemoteCommandService() : base()
         {
-            RemoteCommandSupport = RemoteCommandSupports.Ipc;
+            // Choice None, Ipc, Tcp, Both (Default: None)
+            RemoteCommandSupport = RemoteCommandSupports.Both;
         }
 
         protected override object OnRemoteCommand(object sender, RemoteCommandEventArgs eventArgs)
@@ -52,8 +52,8 @@ namespace Hondarersoft.Dpm.Samples
                     EventLog.WriteEntry($"OnRemoteCommand: \"{eventArgs.Data.ToString()}\"");
                     break;
                 default:
+                    // NOP
                     break;
-
             }
 
             return base.OnRemoteCommand(sender, eventArgs);

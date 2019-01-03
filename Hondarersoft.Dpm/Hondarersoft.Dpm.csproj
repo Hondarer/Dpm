@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Remoting" />
@@ -50,6 +51,9 @@
     <Compile Include="Areas\AreaManagerCore.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Environment\AssemblyInfo.cs" />
+    <Compile Include="Network\Apis\OpenConnection.cs" />
+    <Compile Include="PInvoke\Network.cs" />
     <Compile Include="PInvoke\Path.cs" />
     <Compile Include="Principal\Apis\IsAdministrator.cs" />
     <Compile Include="Areas\Apis\MemoryMappedFileExists.cs" />
@@ -60,7 +64,10 @@
     <Compile Include="Environment\ProcessArgs.cs" />
     <Compile Include="Extensions\ServiceControllerExtensions.cs" />
     <Compile Include="PInvoke\Service.cs" />
+    <Compile Include="Reflection\Apis\IsMethodInherited.cs" />
     <Compile Include="Remoting\Apis\GetIpcRemoteClient.cs" />
+    <Compile Include="Remoting\Apis\GetRemoteTcpPort.cs" />
+    <Compile Include="Remoting\Apis\GetTcpRemoteClient.cs" />
     <Compile Include="Remoting\Apis\InitializeIpcClientChannel.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -69,6 +76,7 @@
     </Compile>
     <Compile Include="ServiceProcess\Apis\GetMyServiceController.cs" />
     <Compile Include="ServiceProcess\Apis\IsServiceExists.cs" />
+    <Compile Include="ServiceProcess\Apis\IsServiceSession.cs" />
     <Compile Include="ServiceProcess\Apis\StartService.cs" />
     <Compile Include="ServiceProcess\Apis\StopService.cs" />
     <Compile Include="ServiceProcess\RemoteCommandEventArgs.cs" />
@@ -89,7 +97,9 @@
     <Compile Include="Sync\Apis\CreateGlobalMutex.cs" />
     <Compile Include="Sync\Apis\CreateMasterMutex.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.ja.resx" />
     <EmbeddedResource Include="Resources\Resource.resx">

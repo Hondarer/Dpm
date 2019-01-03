@@ -8,13 +8,21 @@ namespace Hondarersoft.Dpm.Apis
 {
     public static partial class Remoting
     {
-        public static T GetIpcRemoteClient<T>(string channelName, string uri = null)
+        public static T GetIpcRemoteClient<T>(Type remoteServiceType, string instanceID = null)
         {
-            if (uri == null)
+            string channelName = remoteServiceType.Name;
+
+            if (string.IsNullOrWhiteSpace(instanceID) != true)
             {
-                uri = typeof(T).Name;
+                channelName += $"_{instanceID}";
             }
-            return (T)Activator.GetObject(typeof(T), $"ipc://{channelName}/{uri}");
+
+            return GetIpcRemoteClient<T>(channelName);
+        }
+
+        public static T GetIpcRemoteClient<T>(string channelName)
+        {
+            return (T)Activator.GetObject(typeof(T), $"ipc://{channelName}/{typeof(T).Name}");
         }
     }
 }

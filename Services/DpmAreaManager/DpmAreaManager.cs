@@ -10,17 +10,20 @@ namespace Hondarersoft.Dpm.Services
         {
             DpmAreaManager instance = new DpmAreaManager();
 
+            #region Region for self install
+
             ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
             {
-                DisplayName = "Area Manager",
-                Description = "Description of Area Manager",
-                ExecutableUsers = new List<string>() { "Everyone" }
+                // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
+                ExecutableUsers = new List<string>() { "Users" }
             };
 
             if (instance.TryInstall(serviceInstallParameter) == true)
             {
                 return instance.ExitCode;
             }
+
+            #endregion
 
             Run(instance);
 

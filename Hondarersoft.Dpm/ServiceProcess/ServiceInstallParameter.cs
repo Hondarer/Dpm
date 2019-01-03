@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hondarersoft.Dpm.Environment;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.ServiceProcess;
@@ -15,9 +16,9 @@ namespace Hondarersoft.Dpm.ServiceProcess
             FAILURE_ACTION_RUN_COMMAND = PInvoke.SC_ACTION_TYPE.SC_ACTION_RUN_COMMAND
         }
 
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = new AssemblyInfo().Title;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = new AssemblyInfo().Description;
 
         public ServiceAccount Account { get; set; } = ServiceAccount.LocalSystem;
 

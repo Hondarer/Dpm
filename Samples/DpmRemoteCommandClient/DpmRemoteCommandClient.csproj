@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1B126782-EF47-4C18-BED2-137B256DC0D8}</ProjectGuid>
+    <ProjectGuid>{6E97E17E-0DC2-4476-867E-861CC82F2536}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Hondarersoft.Dpm.Samples</RootNamespace>
-    <AssemblyName>DpmIpcRemoteCommandService</AssemblyName>
+    <AssemblyName>DpmRemoteCommandClient</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,7 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,9 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DpmIpcRemoteCommandService.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="DpmRemoteCommandClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +54,10 @@
     <ProjectReference Include="..\..\Hondarersoft.Dpm\Hondarersoft.Dpm.csproj">
       <Project>{3BC6B9F7-F637-4114-8BFD-971C9B496039}</Project>
       <Name>Hondarersoft.Dpm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DpmRemoteCommandService\DpmRemoteCommandService.csproj">
+      <Project>{1b126782-ef47-4c18-bed2-137b256dc0d8}</Project>
+      <Name>DpmRemoteCommandService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

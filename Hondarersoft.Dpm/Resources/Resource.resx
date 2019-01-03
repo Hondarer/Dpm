@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="NOT_A_SERVICE_SESSION" xml:space="preserve">
+    <value>This process is a service process.
+Please start the process from the service control manager.</value>
+  </data>
   <data name="SERVICE_ALREADY_INSTALLED" xml:space="preserve">
     <value>Service already installed.</value>
   </data>

@@ -12,7 +12,8 @@ namespace Hondarersoft.Dpm.Areas
         public const long BLOCK_ONE = 1;
         public const long RECORD_ONE = 1;
 
-        protected const string MMF_HEAD = "Dpm.AreaData_";
+        protected const string MMF_HEAD = "Dpm.AreaHead_";
+        protected const string MMF_DATA = "Dpm.AreaData_";
 
         protected static readonly object lockObject = new object();
 
@@ -41,7 +42,7 @@ namespace Hondarersoft.Dpm.Areas
 
         protected static string GetMmfName(string name,bool isGlobal)
         {
-            string mmfName = MMF_HEAD;
+            string mmfName = MMF_DATA;
 
             if (isGlobal == true)
             {

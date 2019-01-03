@@ -218,13 +218,25 @@ namespace Hondarersoft.Dpm.Areas
 
             try
             {
-                // TODO: 当該ブロックのポインターを読む
-                // TODO: 書き込み可能なレコードを特定する
-                // TODO: 書き込みを行う
+                AreaManageData.HeaderAccessor.Read(AreaManageData.GetBlockHeaderOffset(block), out AreaBlockHeader areaBlockHeader);
 
-                MemoryMappedViewAccessor.Write(0, ref structure);
-                OnRecordWrite(ref lastUpdated, 1, 1);
-                OnBlockWrite(ref lastUpdated, 1);
+                long writeRecord = ((areaBlockHeader.WritePointer + 1) % AreaManageData.AreaFixedHeader.Records);
+
+                if (writeRecord == areaBlockHeader.ReadPointer)
+                {
+                    // queue full
+                }
+                else
+                {
+                    // TODO: 書き込みを行う
+                    MemoryMappedViewAccessor.Write(0, ref structure);
+                }
+
+                areaBlockHeader.WritePointer = writeRecord;
+                AreaManageData.HeaderAccessor.Write(AreaManageData.GetBlockHeaderOffset(block), ref areaBlockHeader);
+
+                OnRecordWrite(ref lastUpdated, block, writeRecord);
+                OnBlockWrite(ref lastUpdated, block);
             }
             finally
             {

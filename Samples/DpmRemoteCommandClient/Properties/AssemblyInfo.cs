@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Hondarersoft.Dpm.Samples.IpcRecoteCommandClientCommand")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Remote command client")]
+[assembly: AssemblyDescription("Sample client for using IpcRemoteCommand and TcpRemoteCommand.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.Samples.IpcRecoteCommandClientCommand")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.Samples.DpmRemoteCommandClient")]
+[assembly: AssemblyCopyright("Copyright © 2018 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -9,12 +9,14 @@ using System.Reflection;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.ServiceProcess;
 
 namespace Hondarersoft.Dpm.ServiceProcess
 {
-    public class DpmServiceBase : System.ServiceProcess.ServiceBase
+    public class DpmServiceBase : ServiceBase
     {
         public ProcessArgs Args { get; private set; }
 
@@ -102,13 +104,16 @@ namespace Hondarersoft.Dpm.ServiceProcess
             }
         }
 
-        // TODO: IPC と TCP の共存は試していない
-
         public RemoteCommandSupports RemoteCommandSupport { get; protected set; } = RemoteCommandSupports.None;
 
-        public int TcpServicePort { get; protected set; } = 0;
+        public const int UNSET_PORT_NUMBER = -1;
 
+        public int TcpServicePort { get; protected set; } = UNSET_PORT_NUMBER;
+
+        protected TcpChannel tcpServerChannel;
         protected IpcServerChannel ipcServerChannel;
+
+        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = ()=>{ return new RemoteCommandService(); };
 
         public DpmServiceBase()
         {
@@ -124,15 +129,45 @@ namespace Hondarersoft.Dpm.ServiceProcess
             //SupportInstanceID = true; // The default is false.
 
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
-            CanShutdown = IsMethodInherited(nameof(OnShutdown));
-            CanPauseAndContinue = (IsMethodInherited(nameof(OnPause)) || IsMethodInherited(nameof(OnContinue)));
+            CanShutdown = Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnShutdown));
+            CanPauseAndContinue = (Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnPause)) || Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnContinue)));
         }
 
-        protected Func<RemoteCommandService> CreateRemoteCommandService { get; set; } = ()=>{ return new RemoteCommandService(); };
+        /// <summary>
+        /// サービス コントロール マネージャー (SCM) とサービスの実行可能ファイルを登録します。
+        /// </summary>
+        /// <param name="service"><see cref="ServiceBase"/> サービスを開始することを示します。</param>
+        /// <exception cref="ArgumentException"><paramref name="service"/> は <c>null</c> です。</exception>
+        public static new void Run(ServiceBase service)
+        {
+            if (Apis.ServiceProcess.IsServiceSession() == false)
+            {
+                Console.Error.WriteLine(Resources.Resource.NOT_A_SERVICE_SESSION);
+                return;
+            }
+
+            ServiceBase.Run(service);
+        }
+
+        /// <summary>
+        /// サービス コントロール マネージャー (SCM) に複数のサービス実行可能ファイルを登録します。
+        /// </summary>
+        /// <param name="services">サービスの開始を示す ServiceBase インスタンスの配列。</param>
+        /// <exception cref="ArgumentException">サービスを開始するが指定されていません。 配列である可能性があります <c>null</c> または空です。</exception>
+        public static new void Run(ServiceBase[] services)
+        {
+            if (Apis.ServiceProcess.IsServiceSession() == false)
+            {
+                Console.Error.WriteLine(Resources.Resource.NOT_A_SERVICE_SESSION);
+                return;
+            }
+
+            ServiceBase.Run(services);
+        }
 
         protected override void OnStart(string[] args)
         {
-            if (RemoteCommandSupport == RemoteCommandSupports.Ipc)
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
             {
                 //// Local administrators sid
                 //SecurityIdentifier localAdminSid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
@@ -171,20 +206,75 @@ namespace Hondarersoft.Dpm.ServiceProcess
 
                 ipcServerChannel = new IpcServerChannel(props, null, securityDescriptor);
                 ChannelServices.RegisterChannel(ipcServerChannel, true);
-                RemoteCommandService remoteCommandService = CreateRemoteCommandService();
+            }
 
+            RemoteCommandService remoteCommandService = null;
+            if (RemoteCommandSupport != RemoteCommandSupports.None)
+            {
+                remoteCommandService = CreateRemoteCommandService();
                 remoteCommandService.OnRemoteCommand += OnRemoteCommand;
+            }
 
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                if (TcpServicePort == UNSET_PORT_NUMBER)
+                {
+                    TcpServicePort = Apis.Remoting.GetRemoteTcpPort(this, remoteCommandService);
+                }
+
+                tcpServerChannel = new TcpChannel(TcpServicePort);
+                ChannelServices.RegisterChannel(tcpServerChannel, false);
+            }
+
+            if (RemoteCommandSupport != RemoteCommandSupports.None)
+            {
                 RemotingServices.Marshal(remoteCommandService, remoteCommandService.GetType().Name);
+            }
+
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StartListening(null); // IPC の場合は、初回生成時は既に待ち受けを開始している
             }
 
             base.OnStart(args);
         }
 
-        // TODO: Pause/Continue の際に、リモーティングサービスを停止させる
+#if false // 一時停止中もリモートオブジェクト自体は生かしておくほうがいいように思った。
+        protected override void OnPause()
+        {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                ipcServerChannel.StopListening(null);
+            }
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StopListening(null);
+            }
+
+            base.OnPause();
+        }
+
+        protected override void OnContinue()
+        {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Ipc) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                ipcServerChannel.StartListening(null);
+            }
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StartListening(null);
+            }
+            base.OnContinue();
+        }
+#endif
 
         protected override void OnStop()
         {
+            if ((RemoteCommandSupport == RemoteCommandSupports.Tcp) || (RemoteCommandSupport == RemoteCommandSupports.Both))
+            {
+                tcpServerChannel.StopListening(null);
+            }
+
             // Set default exit code.
             // If another ExitCode is set in a derived class,
             // it is necessary to consider whether to call this method.
@@ -198,24 +288,6 @@ namespace Hondarersoft.Dpm.ServiceProcess
             return null;
         }
 
-        /// <summary>
-        /// メソッドが派生クラスに実装されているかどうかを判定します。
-        /// </summary>
-        /// <param name="methodName">確認対象のメソッド名。</param>
-        /// <returns>メソッドが派生クラスに実装されている場合は <c>true</c>、それ以外は <c>false</c>。</returns>
-        protected bool IsMethodInherited(string methodName)
-        {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-
-            // 当該メソッドが自分でないクラスに実装され、かつ、virturl である場合は true
-            if ((method.DeclaringType != typeof(DpmServiceBase).BaseType) && (method.IsVirtual == true))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public bool TryInstall(ServiceInstallParameter serviceInstallParameter = null)
         {
             if (serviceInstallParameter == null)
@@ -223,7 +295,44 @@ namespace Hondarersoft.Dpm.ServiceProcess
                 serviceInstallParameter = new ServiceInstallParameter();
             }
 
-            if (Args.HasKey("Install") == true)
+            if (Args.HasKey("ReInstall") == true)
+            {
+                if (Apis.Principal.IsAdministrator() != true)
+                {
+                    Console.Error.WriteLine("You are not Administrator.");
+                    ExitCode = 1;
+                }
+                else if (Apis.ServiceProcess.IsServiceExists(ServiceName) != true)
+                {
+                    Console.Error.WriteLine(Resources.Resource.SERVICE_ISNOT_INSTALLED);
+                    ExitCode = 1;
+                }
+                else
+                {
+                    try
+                    {
+                        new IntegratedServiceInstaller().Uninstall(GetType().Name, InstanceID);
+                        new IntegratedServiceInstaller().Install(GetType().Name, InstanceID, serviceInstallParameter);
+
+                        if (Apis.ServiceProcess.IsServiceExists(ServiceName) == true)
+                        {
+                            ExitCode = 0;
+                        }
+                        else
+                        {
+                            ExitCode = 1;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine(ex);
+                        ExitCode = 1;
+                    }
+                }
+
+                return true;
+            }
+            else if (Args.HasKey("Install") == true)
             {
                 if (Apis.Principal.IsAdministrator() != true)
                 {

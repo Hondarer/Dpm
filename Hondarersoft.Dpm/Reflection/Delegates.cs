@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Reflection
 {
     public static class Delegates
     {
-        private static ConcurrentDictionary<Type, Func<object>> InstanceDelegateCache = new ConcurrentDictionary<Type, Func<object>>();
-        private static ConcurrentDictionary<Tuple<Type, string>, Func<object, object>> GetDelegateCache = new ConcurrentDictionary<Tuple<Type, string>, Func<object, object>>();
-        private static ConcurrentDictionary<Tuple<Type, string>, Action<object, object>> SetDelegateCache = new ConcurrentDictionary<Tuple<Type, string>, Action<object, object>>();
-        private static ConcurrentDictionary<Tuple<Type, string, Type[]>, Action<object, object[]>> ActionDelegateCache = new ConcurrentDictionary<Tuple<Type, string, Type[]>, Action<object, object[]>>();
-        private static ConcurrentDictionary<Tuple<Type, string, Type[]>, Func<object, object[], object>> FuncDelegateCache = new ConcurrentDictionary<Tuple<Type, string, Type[]>, Func<object, object[], object>>();
+        private static readonly ConcurrentDictionary<Type, Func<object>> InstanceDelegateCache = new ConcurrentDictionary<Type, Func<object>>();
+        private static readonly ConcurrentDictionary<Tuple<Type, string>, Func<object, object>> GetDelegateCache = new ConcurrentDictionary<Tuple<Type, string>, Func<object, object>>();
+        private static readonly ConcurrentDictionary<Tuple<Type, string>, Action<object, object>> SetDelegateCache = new ConcurrentDictionary<Tuple<Type, string>, Action<object, object>>();
+        private static readonly ConcurrentDictionary<Tuple<Type, string, Type[]>, Action<object, object[]>> ActionDelegateCache = new ConcurrentDictionary<Tuple<Type, string, Type[]>, Action<object, object[]>>();
+        private static readonly ConcurrentDictionary<Tuple<Type, string, Type[]>, Func<object, object[], object>> FuncDelegateCache = new ConcurrentDictionary<Tuple<Type, string, Type[]>, Func<object, object[], object>>();
 
         /// <summary>
         /// 式木を使って、<param name="targetType"/> クラスの新しいインスタンスを生成するデリゲートを生成します。

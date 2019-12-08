@@ -14,7 +14,7 @@ namespace Hondarersoft.Dpm.Apis
         {
             MethodInfo method = instance.GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            // 当該メソッドが自分でないクラスに実装され、かつ、virturl である場合は true
+            // 当該メソッドが派生クラスに実装され、かつ、virturl である場合は true
             if ((method.DeclaringType != baseType) && (method.IsVirtual == true))
             {
                 return true;

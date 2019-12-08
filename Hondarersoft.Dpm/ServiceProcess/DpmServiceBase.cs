@@ -129,8 +129,8 @@ namespace Hondarersoft.Dpm.ServiceProcess
             //SupportInstanceID = true; // The default is false.
 
             // シャットダウン可能、一時停止および再開可能を、派生クラスでのメソッド実装状態によって判定する。
-            CanShutdown = Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnShutdown));
-            CanPauseAndContinue = (Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnPause)) || Apis.Reflection.IsMethodInherited(this, typeof(DpmServiceBase), nameof(OnContinue)));
+            CanShutdown = Apis.Reflection.IsMethodInherited(this, typeof(ServiceBase), nameof(OnShutdown));
+            CanPauseAndContinue = (Apis.Reflection.IsMethodInherited(this, typeof(ServiceBase), nameof(OnPause)) || Apis.Reflection.IsMethodInherited(this, typeof(ServiceBase), nameof(OnContinue)));
         }
 
         /// <summary>

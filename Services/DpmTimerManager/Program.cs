@@ -1,15 +1,33 @@
-﻿using System;
+﻿using Hondarersoft.Dpm.ServiceProcess;
+using Hondarersoft.Dpm.Timer;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hondarersoft.Dpm.Services
 {
-    class Program
+    public class DpmTimerManager : TimerManagerCore
     {
-        static void Main(string[] args)
+        public static int Main(string[] args)
         {
+            DpmTimerManager instance = new DpmTimerManager();
+
+            #region Region for self install
+
+            ServiceInstallParameter serviceInstallParameter = new ServiceInstallParameter
+            {
+                // DisplayName and Description are automatically obtained from AssemblyInfo.cs.
+                ExecutableUsers = new List<string>() { "Users" }
+            };
+
+            if (instance.TryInstall(serviceInstallParameter) == true)
+            {
+                return instance.ExitCode;
+            }
+
+            #endregion
+
+            Run(instance);
+
+            return instance.ExitCode;
         }
     }
 }

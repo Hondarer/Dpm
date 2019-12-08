@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Hondarersoft.Dpm.TimerManager")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Timer manager")]
+[assembly: AssemblyDescription("Management the timer.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.TimerManager")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.Services.DpmTimerManager")]
+[assembly: AssemblyCopyright("Copyright © 2019 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

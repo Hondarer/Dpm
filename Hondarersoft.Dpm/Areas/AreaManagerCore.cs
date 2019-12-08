@@ -88,7 +88,7 @@ namespace Hondarersoft.Dpm.Areas
         {
             //serverChannel.StopListening(null);
 
-            ExitCode = 0;
+            //ExitCode = 0;
 
             base.OnStop();
         }

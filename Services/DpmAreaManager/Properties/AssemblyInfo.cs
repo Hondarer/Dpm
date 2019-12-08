@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("Area Manager")]
-[assembly: AssemblyDescription("Management of the area.")]
+[assembly: AssemblyTitle("Area manager")]
+[assembly: AssemblyDescription("Management the area.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hondarersoft.Dpm.Services.AreaManager")]
+[assembly: AssemblyProduct("Hondarersoft.Dpm.Services.DpmAreaManager")]
 [assembly: AssemblyCopyright("Copyright © 2018 Tetsuo Honda")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

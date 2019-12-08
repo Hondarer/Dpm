@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hondarersoft.Dpm</RootNamespace>
     <AssemblyName>Hondarersoft.Dpm</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +98,9 @@
     <Compile Include="Sync\Apis\CreateClientMutex.cs" />
     <Compile Include="Sync\Apis\CreateGlobalMutex.cs" />
     <Compile Include="Sync\Apis\CreateMasterMutex.cs" />
+    <Compile Include="Timer\TimerManagerCore.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\" />

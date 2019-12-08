@@ -67,6 +67,7 @@
     <Compile Include="Extensions\ServiceControllerExtensions.cs" />
     <Compile Include="PInvoke\Service.cs" />
     <Compile Include="Reflection\Apis\IsMethodInherited.cs" />
+    <Compile Include="Reflection\Delegates.cs" />
     <Compile Include="Remoting\Apis\GetIpcRemoteClient.cs" />
     <Compile Include="Remoting\Apis\GetRemoteTcpPort.cs" />
     <Compile Include="Remoting\Apis\GetTcpRemoteClient.cs" />

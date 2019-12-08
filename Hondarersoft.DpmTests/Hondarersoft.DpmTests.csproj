@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Reflection\Apis\IsMethodInheritedTests.cs" />
+    <Compile Include="Reflection\DelegatesTest.cs" />
     <Compile Include="ServiceProcess\Apis\IsServiceSessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
